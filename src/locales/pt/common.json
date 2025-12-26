@@ -1,0 +1,26 @@
+{
+  "placeholder": {
+    "confirmPassword": "Confirme sua senha",
+    "email": "Digite seu email",
+    "name": "Digite seu nome",
+    "password": "Digite sua senha",
+    "surname": "Digite seu sobrenome"
+  },
+  "generic": {
+    "loading": "Carregando...",
+    "signInFailed": "Ops! Algo deu errado com seu login ou senha."
+  },
+  "errors": {
+    "failedRequest": "Ops! Algo deu errado. Por favor, tente novamente mais tarde.",
+    "forgotPasswordFailed": "Ops! Algo deu errado ao tentar redefinir sua senha. Por favor, tente novamente ou entre em contato com o suporte.",
+    "signInFailed": "Ops! Algo deu errado com seu login ou senha.",
+    "userAlreadyExists": "Já existe uma conta com esse email. Tente fazer login ou use outro email.",
+    "resetPasswordFailed": "Ops! Algo deu errado ao tentar redefinir sua senha. Por favor, tente novamente ou verifique se o link de redefinição está correto."
+  },
+  "success": {
+    "forgotPasswordSuccess": "Verifique seu email para redefinir sua senha.",
+    "signInSuccess": "Sucesso, você está logado e iremos redirecioná-lo.",
+    "userCreated": "Usuário criado com sucesso",
+    "resetPasswordSuccess": "Senha redefinida com sucesso, você pode fechar esta página."
+  }
+}

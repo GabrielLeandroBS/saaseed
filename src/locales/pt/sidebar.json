@@ -1,0 +1,11 @@
+{
+  "shortDescription": "Template de Aplicação Web Moderna",
+  "navMain": {
+    "search": "Pesquisa",
+    "title": "Plataforma"
+  },
+  "navSecondary": {
+    "support": "Suporte",
+    "feedback": "Feedback"
+  }
+}

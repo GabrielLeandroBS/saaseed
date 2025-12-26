@@ -1,0 +1,25 @@
+{
+  "placeholder": {
+    "confirmPassword": "Confirm your password",
+    "email": "Enter your email",
+    "name": "Enter your name",
+    "password": "Enter your password",
+    "surname": "Enter your surname"
+  },
+  "generic": {
+    "loading": "Loading..."
+  },
+  "errors": {
+    "failedRequest": "Oops! Something went wrong. Please try again later.",
+    "forgotPasswordFailed": "Oops! Something went wrong while trying to reset your password. Please try again or contact support.",
+    "signInFailed": "Oops! Something went wrong with your login or password.",
+    "userAlreadyExists": "An account with this email already exists. Please try logging in or use a different email.",
+    "resetPasswordFailed": "Oops! Something went wrong while trying to reset your password. Please try again or verify if the reset link is correct."
+  },
+  "success": {
+    "forgotPasswordSuccess": "Check your email to reset your password.",
+    "signInSuccess": "Success, you are logged in and we will redirect you.",
+    "userCreated": "User created successfully",
+    "resetPasswordSuccess": "Password reset successfully, you can close this page."
+  }
+}

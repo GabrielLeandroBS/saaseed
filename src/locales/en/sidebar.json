@@ -1,0 +1,11 @@
+{
+  "shortDescription": "Modern Web Application Template",
+  "navMain": {
+    "search": "Search",
+    "title": "Platform"
+  },
+  "navSecondary": {
+    "support": "Support",
+    "feedback": "Feedback"
+  }
+}
