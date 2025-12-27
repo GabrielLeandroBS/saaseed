@@ -13,10 +13,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-function ResizablePanelGroup({
-  className,
-  ...props
-}: GroupProps) {
+function ResizablePanelGroup({ className, ...props }: GroupProps) {
   return (
     <Group
       data-slot="resizable-panel-group"
@@ -29,9 +26,7 @@ function ResizablePanelGroup({
   );
 }
 
-function ResizablePanel({
-  ...props
-}: PanelProps) {
+function ResizablePanel({ ...props }: PanelProps) {
   return <Panel data-slot="resizable-panel" {...props} />;
 }
 
