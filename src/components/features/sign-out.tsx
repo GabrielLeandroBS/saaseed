@@ -9,7 +9,10 @@ import { signOut } from "@/lib/auth/client";
 
 function SignOut() {
   const handleSignOut = async () => {
-    await signOut();
+    await signOut({});
+    // Proxy will handle redirect based on authentication status
+    // After signOut, session cookie is removed, so proxy will redirect to sign-in
+    window.location.reload();
   };
 
   return (

@@ -12,5 +12,12 @@
       "lastMonth": "Last Month",
       "thisYear": "This Year"
     }
+  },
+  "search": {
+    "placeholder": "Search...",
+    "dialogPlaceholder": "Type a command or search...",
+    "noResults": "No results found.",
+    "suggestions": "Suggestions",
+    "ariaLabel": "Search"
   }
 }

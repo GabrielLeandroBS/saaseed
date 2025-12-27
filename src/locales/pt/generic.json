@@ -13,5 +13,12 @@
       "lastMonth": "Mês Passado",
       "thisYear": "Este Ano"
     }
+  },
+  "search": {
+    "placeholder": "Buscar...",
+    "dialogPlaceholder": "Digite um comando ou busque...",
+    "noResults": "Nenhum resultado encontrado.",
+    "suggestions": "Sugestões",
+    "ariaLabel": "Buscar"
   }
 }

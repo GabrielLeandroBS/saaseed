@@ -195,37 +195,42 @@ function DateRangePicker({
           id="date"
           variant="outline"
           className={cn(
-            "max-w-72 w-full justify-start text-left font-normal",
+            "max-w-72 w-full justify-start text-left flex gap-2font-normal",
             !date && "text-muted-foreground",
             className,
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date?.from ? (
-            date.to ? (
-              <>
+          <CalendarIcon className="h-4 w-4" />
+
+          <div className="items-center gap-2 hidden md:flex">
+            {date?.from ? (
+              date.to ? (
+                <>
+                  <Text as="span" size="sm">
+                    {format(date.from, "dd MMM yyyy", {
+                      locale: dateFnsLocale,
+                    })}
+                  </Text>
+                  <Text as="span" size="sm">
+                    {" "}
+                    -{" "}
+                  </Text>
+                  <Text as="span" size="sm">
+                    {format(date.to, "dd MMM yyyy", { locale: dateFnsLocale })}
+                  </Text>
+                </>
+              ) : (
                 <Text as="span" size="sm">
                   {format(date.from, "dd MMM yyyy", { locale: dateFnsLocale })}
                 </Text>
-                <Text as="span" size="sm">
-                  {" "}
-                  -{" "}
-                </Text>
-                <Text as="span" size="sm">
-                  {format(date.to, "dd MMM yyyy", { locale: dateFnsLocale })}
-                </Text>
-              </>
+              )
             ) : (
-              <Text as="span" size="sm">
-                {format(date.from, "dd MMM yyyy", { locale: dateFnsLocale })}
+              <Text as="span" size="sm" color="muted">
+                {translations.pickDateRange}
               </Text>
-            )
-          ) : (
-            <Text as="span" size="sm" color="muted">
-              {translations.pickDateRange}
-            </Text>
-          )}
-          <ChevronDownIcon className="ml-auto h-4 w-4 opacity-50" />
+            )}
+            <ChevronDownIcon className="ml-auto h-4 w-4 opacity-50" />
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="end">

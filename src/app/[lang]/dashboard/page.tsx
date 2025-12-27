@@ -2,11 +2,15 @@ import { DateRangePicker } from "@/components/container/generic/calendar";
 import { Text } from "@/components/ui/text";
 
 import { getDictionary } from "@/lib/get/dictionaries";
+import { requireAuth } from "@/server/actions";
 
 import { ParamsProps } from "@/models/interfaces/components/params";
 
 export default async function DashboardPage({ params }: ParamsProps) {
   const { lang } = await params;
+
+  // Require authentication - redirects to sign-in if not authenticated
+  await requireAuth();
 
   const dict = await getDictionary(lang);
 

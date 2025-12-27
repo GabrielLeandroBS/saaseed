@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
 import { env } from "@/env";
 
 /**
@@ -20,4 +21,5 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  plugins: [nextCookies()], // Automatically sets cookies in server actions
 });
