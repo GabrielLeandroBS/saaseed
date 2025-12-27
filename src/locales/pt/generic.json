@@ -1,4 +1,17 @@
 {
   "loading": "Carregando...",
-  "signInFailed": "Ops! Algo deu errado com seu login ou senha."
+  "signInFailed": "Ops! Algo deu errado com seu login ou senha.",
+  "calendar": {
+    "pickDateRange": "Selecione um intervalo de datas",
+    "presets": {
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "thisWeek": "Esta Semana",
+      "last7Days": "Últimos 7 Dias",
+      "last28Days": "Últimos 28 Dias",
+      "thisMonth": "Este Mês",
+      "lastMonth": "Mês Passado",
+      "thisYear": "Este Ano"
+    }
+  }
 }

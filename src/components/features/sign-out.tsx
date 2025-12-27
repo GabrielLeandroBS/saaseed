@@ -1,10 +1,13 @@
 "use client";
+
+import * as React from "react";
 import { LogOut } from "lucide-react";
 
-import { signOut } from "@/lib/auth/client";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-const SignOut = () => {
+import { signOut } from "@/lib/auth/client";
+
+function SignOut() {
   const handleSignOut = async () => {
     await signOut();
   };
@@ -18,6 +21,6 @@ const SignOut = () => {
       Log out
     </DropdownMenuItem>
   );
-};
+}
 
 export { SignOut };

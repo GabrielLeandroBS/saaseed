@@ -1,7 +1,7 @@
 "use client";
 
+import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,11 +24,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { Text } from "@/components/ui/text";
 
 import { cn } from "@/lib/utils";
-
-import { AuthProps } from "@/models/interfaces/auth";
-
+import { AuthProps } from "@/models/interfaces/components/forms/auth";
 import {
   AuthForgotPasswordSchema,
   AuthForgotPasswordSchemaType,
@@ -40,7 +39,7 @@ export function ForgotPasswordForm({
   translation,
   ...props
 }: AuthProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const form = useForm<z.infer<typeof AuthForgotPasswordSchema>>({
     resolver: zodResolver(AuthForgotPasswordSchema),
@@ -130,9 +129,15 @@ export function ForgotPasswordForm({
         </CardContent>
       </Card>
 
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      <Text
+        as="div"
+        size="xs"
+        color="muted"
+        align="center"
+        className="*:[a]:hover:text-primary text-balance *:[a]:underline *:[a]:underline-offset-4"
+      >
         {translation?.authentication.forgotPasswordMessage}
-      </div>
+      </Text>
     </div>
   );
 }

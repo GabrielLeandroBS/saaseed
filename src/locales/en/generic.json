@@ -1,3 +1,16 @@
 {
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "calendar": {
+    "pickDateRange": "Pick a date range",
+    "presets": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This Week",
+      "last7Days": "Last 7 Days",
+      "last28Days": "Last 28 Days",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "thisYear": "This Year"
+    }
+  }
 }

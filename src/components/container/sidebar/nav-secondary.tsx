@@ -1,4 +1,4 @@
-import * as React from "react";
+"use client";
 
 import {
   SidebarGroup,
@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { NavSecondaryProps } from "@/models/interfaces/nav-secondary";
+import { NavSecondaryProps } from "@/models/interfaces/components/sidebar/nav-secondary";
 
 export function NavSecondary({ items, ...props }: NavSecondaryProps) {
   return (

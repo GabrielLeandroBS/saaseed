@@ -51,8 +51,8 @@ function isSpecialFile(path: string): boolean {
   return path.endsWith("robots.txt") || path.endsWith("sitemap.xml");
 }
 
-// Middleware function
-export async function proxy(request: NextRequest) {
+// Proxy function (formerly middleware)
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip locale redirection for robots.txt and sitemap.xml
@@ -80,10 +80,7 @@ export async function proxy(request: NextRequest) {
       const locale =
         getLocaleFromPathname(pathname) || getLocaleFromHeaders(request);
       return NextResponse.redirect(
-        new URL(
-          `/${locale}${FrontendRoutesEnum.DASHBOARD}`,
-          request.url,
-        ),
+        new URL(`/${locale}${FrontendRoutesEnum.DASHBOARD}`, request.url),
       );
     }
   } else {
@@ -131,7 +128,7 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-// Config to define middleware behavior
+// Config to define proxy behavior
 export const config = {
   matcher: [
     // Apply to all paths except internal Next.js paths, API routes, and static assets

@@ -21,6 +21,14 @@ const nextConfig = {
     webVitalsAttribution: ["CLS", "LCP", "FID", "INP"],
   },
   serverExternalPackages: ["sharp"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },

@@ -1,17 +1,14 @@
 "use client";
 
+import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { signIn } from "@/lib/auth/client";
-
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -30,12 +27,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { Separator } from "@/components/ui/separator";
+import { Text } from "@/components/ui/text";
 
+import { signIn } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
-
-import { AuthProps } from "@/models/interfaces/auth";
-
 import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
+import { AuthProps } from "@/models/interfaces/components/forms/auth";
 import { AuthSignInSchema, AuthSignInSchemaType } from "@/models/schemas/auth";
 
 export function SignInForm({
@@ -45,9 +43,8 @@ export function SignInForm({
   ...props
 }: AuthProps) {
   const router = useRouter();
-
-  const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [googleLoading, setGoogleLoading] = React.useState(false);
 
   const form = useForm<z.infer<typeof AuthSignInSchema>>({
     resolver: zodResolver(AuthSignInSchema),
@@ -116,7 +113,8 @@ export function SignInForm({
       toast.error(
         typeof error === "string"
           ? error
-          : translation?.errors.failedRequest || "Failed to sign in with Google",
+          : translation?.errors.failedRequest ||
+              "Failed to sign in with Google",
       );
       setGoogleLoading(false);
     }
@@ -193,10 +191,15 @@ export function SignInForm({
                 <div className="absolute inset-0 flex items-center">
                   <Separator />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">
+                <div className="relative flex justify-center">
+                  <Text
+                    as="span"
+                    size="xs"
+                    color="muted"
+                    className="bg-card px-2 uppercase"
+                  >
                     {translation?.authentication.or}
-                  </span>
+                  </Text>
                 </div>
               </div>
 
@@ -239,7 +242,7 @@ export function SignInForm({
                 )}
               </Button>
 
-              <div className="text-center text-sm">
+              <Text as="div" size="sm" align="center">
                 {translation?.authentication.dontHaveAccount}{" "}
                 <Link
                   href={FrontendRoutesEnum.SIGN_UP}
@@ -247,15 +250,21 @@ export function SignInForm({
                 >
                   {translation?.authentication.createAccount}
                 </Link>
-              </div>
+              </Text>
             </form>
           </Form>
         </CardContent>
       </Card>
 
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      <Text
+        as="div"
+        size="xs"
+        color="muted"
+        align="center"
+        className="*:[a]:hover:text-primary text-balance *:[a]:underline *:[a]:underline-offset-4"
+      >
         {translation?.authentication.welcomeMessage}
-      </div>
+      </Text>
     </div>
   );
 }

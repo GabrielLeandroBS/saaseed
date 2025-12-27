@@ -24,7 +24,7 @@ Template is a modern web application developed with Next.js, designed to be a st
 
 ### Core
 
-- ⚡ [Next.js 15](https://nextjs.org/) - React framework with advanced features
+- ⚡ [Next.js 16](https://nextjs.org/) - React framework with advanced features
 - ⚛️ [React 19](https://react.dev/) - JavaScript library for building interfaces
 - 📘 [TypeScript](https://www.typescriptlang.org/) - JavaScript superset with static typing
 
@@ -45,7 +45,7 @@ Template is a modern web application developed with Next.js, designed to be a st
 
 ### Authentication and Security
 
-- 🔐 [NextAuth.js](https://next-auth.js.org/) - Complete authentication
+- 🔐 [Better Auth](https://www.better-auth.com/) - Complete authentication solution
 - 🍪 [js-cookie](https://github.com/js-cookie/js-cookie) - Cookie management
 
 ### Internationalization
@@ -142,30 +142,43 @@ The project uses i18next for complete multi-language support. Translations are m
 
 ## 🔒 Authentication
 
-- Robust authentication system with NextAuth.js
+- Robust authentication system with Better Auth
 - Support for multiple authentication providers
 - Secure session management
 - Route protection
-- Middleware-based authentication flow
+- Proxy-based authentication flow (Next.js 16)
 
 ## 📦 Project Structure
 
 ```
-src/
-├── app/              # Next.js pages and layouts
-├── components/       # Reusable components
-├── hooks/           # Custom hooks
-├── lib/             # Utilities and configurations
-├── locales/         # Translation files
-├── services/        # Services and APIs
-├── styles/          # Global styles
-├── types/           # TypeScript type definitions
-└── middleware.ts    # Authentication and i18n middleware
+/
+├── proxy.ts         # Proxy for authentication and i18n (Next.js 16)
+└── src/
+    ├── app/              # Next.js pages and layouts
+    ├── components/       # Reusable components
+    │   ├── container/   # Layout components and forms
+    │   ├── features/     # Feature components
+    │   ├── providers/    # Context providers
+    │   └── ui/          # UI components (Shadcn/UI)
+    ├── hooks/           # Custom hooks
+    ├── lib/             # Utilities and configurations
+    ├── locales/         # Translation files
+    ├── models/          # TypeScript models
+    │   ├── constants/   # Constants
+    │   ├── enums/       # Enums
+    │   ├── interfaces/  # TypeScript interfaces
+    │   │   ├── components/  # Component interfaces
+    │   │   └── services/    # Service interfaces
+    │   ├── mocks/       # Mock data
+    │   ├── schemas/     # Zod schemas
+    │   └── types/       # TypeScript types
+    ├── services/        # Services and APIs
+    └── server/          # Server-side utilities
 ```
 
-### Middleware (`src/middleware.ts`)
+### Proxy (`proxy.ts`)
 
-The middleware handles:
+The proxy handles (Next.js 16):
 
 - 🔒 Route protection for authenticated routes
 - 🔄 Authentication redirects
@@ -179,6 +192,7 @@ Key features:
 - Redirects unauthenticated users to sign-in
 - Handles locale detection and routing
 - Supports multiple languages (pt, en)
+- Runs on Node.js runtime
 
 ### 🔧 Component Interfaces
 

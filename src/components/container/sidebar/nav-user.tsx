@@ -1,9 +1,8 @@
 "use client";
 
+import * as React from "react";
 import { ChevronsUpDown } from "lucide-react";
 
-import { SignOut } from "@/components/container/sign-out";
-import { useSession } from "@/lib/auth/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -19,13 +18,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Text } from "@/components/ui/text";
+import { SignOut } from "@/components/features/sign-out";
+
+import { useSession } from "@/lib/auth/client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
 
   const { data: session } = useSession();
-
-  console.log(session);
 
   return (
     <SidebarMenu>
@@ -45,11 +46,13 @@ export function NavUser() {
                   {session?.user?.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
+              <div className="grid flex-1">
+                <Text as="span" size="sm" weight="medium" className="truncate">
                   {session?.user?.name}
-                </span>
-                <span className="truncate text-xs">{session?.user?.email}</span>
+                </Text>
+                <Text as="span" size="xs" className="truncate">
+                  {session?.user?.email}
+                </Text>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -71,13 +74,24 @@ export function NavUser() {
                     {session?.user?.name?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
+                <div className="grid flex-1">
+                  <Text
+                    as="span"
+                    size="sm"
+                    weight="medium"
+                    leading="tight"
+                    className="truncate"
+                  >
                     {session?.user?.name}
-                  </span>
-                  <span className="truncate text-xs">
+                  </Text>
+                  <Text
+                    as="span"
+                    size="xs"
+                    leading="tight"
+                    className="truncate"
+                  >
                     {session?.user?.email}
-                  </span>
+                  </Text>
                 </div>
               </div>
             </DropdownMenuLabel>

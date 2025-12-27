@@ -1,6 +1,8 @@
 "use client";
 
-export const LoadingSpinner = () => {
+import * as React from "react";
+
+function LoadingSpinner() {
   return (
     <svg
       className="w-4 h-4 text-current animate-spin"
@@ -27,4 +29,6 @@ export const LoadingSpinner = () => {
       ></path>
     </svg>
   );
-};
+}
+
+export { LoadingSpinner };
