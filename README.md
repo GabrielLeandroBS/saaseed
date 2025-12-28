@@ -192,11 +192,14 @@ The project uses i18next for complete multi-language support. Translations are m
 ## 🔒 Authentication
 
 - Robust authentication system with Better Auth
-- Support for multiple authentication providers (email/password, magic links)
-- Secure session management with cookies
+- Support for multiple authentication providers (email/password, magic links, Google OAuth)
+- **Stateless session management** - Sessions stored in encrypted cookies (JWE)
+- **Cookie cache** - 7-day session duration with automatic refresh
+- Secure session management with encrypted cookies
 - Route protection for authenticated areas
 - Proxy-based authentication flow (Next.js 16)
 - Password reset and email verification flows
+- No database required for authentication (stateless mode)
 
 ## 💾 Database & Backend
 
