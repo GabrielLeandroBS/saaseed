@@ -24,38 +24,6 @@ export const requireAuth = cache(async () => {
   return session;
 });
 
-export async function signInEmail(email: string, password: string) {
-  const result = await auth.api.signInEmail({
-    body: {
-      email,
-      password,
-    },
-  });
-
-  return result;
-}
-
-export async function signUpEmail(
-  email: string,
-  password: string,
-  name?: string,
-) {
-  const body: { email: string; password: string; name?: string } = {
-    email,
-    password,
-  };
-
-  if (name) {
-    body.name = name;
-  }
-
-  const result = await auth.api.signUpEmail({
-    body: body as { email: string; password: string; name: string },
-  });
-
-  return result;
-}
-
 export async function signOut() {
   await auth.api.signOut({
     headers: await headers(),

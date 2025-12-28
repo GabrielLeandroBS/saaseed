@@ -13,6 +13,18 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 7 * 24 * 60 * 60,
+      strategy: "jwe",
+      refreshCache: true,
+    },
+  },
+  account: {
+    storeStateStrategy: "cookie",
+    storeAccountCookie: true,
+  },
   plugins: [
     nextCookies(),
     magicLink({

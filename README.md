@@ -1,13 +1,17 @@
-# 🚀 Template - Frontend
+# 🚀 SaaS Seed - Micro SaaS Starter
+
+> ⚠️ **Status:** This project is currently in active development. Features and APIs may change.
 
 ## 📋 Table of Contents
 
 - [About the Project](#-about-the-project)
+- [✨ Features](#-features)
 - [🛠️ Technologies Used](#️-technologies-used)
 - [🚀 How to Run](#-how-to-run)
 - [🌐 Internationalization](#-internationalization)
 - [🎨 UI/UX](#-uiux)
 - [🔒 Authentication](#-authentication)
+- [💾 Database & Backend](#-database--backend)
 - [📦 Project Structure](#-project-structure)
 - [🛠️ Available Scripts](#-available-scripts)
 - [📝 Code Conventions](#-code-conventions)
@@ -18,7 +22,23 @@
 
 ## 💡 About the Project
 
-Template is a modern web application developed with Next.js, designed to be a starting point for your next project. The project uses the latest technologies from the React and Next.js ecosystem to provide an exceptional development experience. This template includes features like authentication, internationalization, dark mode, and a component library, making it perfect for building modern web applications.
+**SaaS Seed** is a modern, production-ready starter template designed specifically for building **micro SaaS applications**. Built on top of **Next.js 16** and **Supabase**, this starter provides all the essential features and infrastructure that a micro SaaS needs to get up and running quickly.
+
+This project is currently in **active development** and includes:
+
+- 🔐 **Complete authentication system** with Better Auth
+- 💾 **Database integration** with Supabase (PostgreSQL)
+- 🌍 **Internationalization** (i18n) support
+- 🎨 **Modern UI/UX** with Shadcn/UI components
+- 📊 **Dashboard** with analytics and data visualization
+- 👥 **Team management** features
+- 🔔 **Notifications** and toast system
+- 🌓 **Dark mode** support
+- 📱 **Fully responsive** design
+- ⚡ **Type-safe** with TypeScript
+- 🎯 **Production-ready** architecture
+
+Perfect for entrepreneurs and developers who want to focus on building their product features instead of setting up infrastructure from scratch.
 
 ## 🛠️ Technologies Used
 
@@ -47,6 +67,13 @@ Template is a modern web application developed with Next.js, designed to be a st
 
 - 🔐 [Better Auth](https://www.better-auth.com/) - Complete authentication solution
 - 🍪 [js-cookie](https://github.com/js-cookie/js-cookie) - Cookie management
+
+### Database & Backend
+
+- 🐘 [Supabase](https://supabase.com/) - Open source Firebase alternative with PostgreSQL
+- 🗄️ [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM for database management
+- 📧 [Resend](https://resend.com/) - Email API for transactional emails
+- 🔌 [Postgres.js](https://github.com/porsager/postgres) - Fast PostgreSQL client
 
 ### Internationalization
 
@@ -140,13 +167,57 @@ The project uses i18next for complete multi-language support. Translations are m
 - High-quality, accessible UI components
 - Modern and clean interface design
 
+## ✨ Features
+
+### Core Micro SaaS Features
+
+- ✅ **User Authentication** - Complete auth system with email/password and magic links
+- ✅ **Team Management** - Multi-user support with role-based access control
+- ✅ **Dashboard** - Analytics dashboard with charts and metrics
+- ✅ **Internationalization** - Multi-language support (PT/EN)
+- ✅ **Theme System** - Light/dark mode with system preference detection
+- ✅ **Responsive Design** - Mobile-first, works on all devices
+- ✅ **Type Safety** - Full TypeScript coverage
+- ✅ **Component Library** - Pre-built, accessible UI components following shadcn/ui patterns
+
+### Infrastructure
+
+- ✅ **Supabase Integration** - PostgreSQL database with real-time capabilities
+- ✅ **Email Service** - Transactional emails with Resend
+- ✅ **Environment Validation** - Type-safe environment variables with Zod
+- ✅ **Database Migrations** - Version-controlled schema changes
+- ✅ **API Routes** - Serverless API endpoints
+- ✅ **Route Protection** - Proxy-based authentication (Next.js 16)
+
 ## 🔒 Authentication
 
 - Robust authentication system with Better Auth
-- Support for multiple authentication providers
-- Secure session management
-- Route protection
+- Support for multiple authentication providers (email/password, magic links)
+- Secure session management with cookies
+- Route protection for authenticated areas
 - Proxy-based authentication flow (Next.js 16)
+- Password reset and email verification flows
+
+## 💾 Database & Backend
+
+- **Supabase PostgreSQL** - Production-ready database
+- **Drizzle ORM** - Type-safe database queries and migrations
+- **Database Migrations** - Version-controlled schema management
+- **Type-safe API** - Full TypeScript support for database operations
+- **Real-time Capabilities** - Supabase real-time subscriptions (optional)
+
+### Database Scripts
+
+```bash
+# Link to your Supabase project
+pnpm db:link
+
+# Create a new migration
+pnpm db:migration:new
+
+# Push migrations to database
+pnpm db:push
+```
 
 ## 📦 Project Structure
 
@@ -246,13 +317,40 @@ Benefits of this approach:
 
 ## 🚀 Deployment
 
-The application can be deployed to various platforms:
+The application can be deployed to various platforms. For micro SaaS applications, we recommend:
 
-### Vercel (Recommended)
+### Vercel (Recommended for Frontend)
 
 1. Connect your GitHub repository to Vercel
-2. Configure environment variables
+2. Configure environment variables (see `.env.example`)
 3. Deploy with automatic preview deployments
+4. Set up custom domain (optional)
+
+### Supabase (Database & Backend)
+
+- Database is already hosted on Supabase
+- Configure connection string in environment variables
+- Set up database migrations in Supabase dashboard
+
+### Environment Variables for Production
+
+Make sure to set all required environment variables in your deployment platform:
+
+```env
+# Better Auth
+BETTER_AUTH_SECRET=your_production_secret
+BETTER_AUTH_URL=https://your-domain.com
+
+# Supabase Database
+DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
+
+# API
+NEXT_PUBLIC_API_URL=https://your-domain.com
+
+# Optional: Supabase Client (if using Storage/Realtime)
+NEXT_PUBLIC_SUPABASE_URL=https://[project-ref].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
 ## 🤝 Contributing
 
@@ -277,6 +375,26 @@ Please use the GitHub issue tracker to report bugs. Include:
 - Expected behavior
 - Screenshots if applicable
 
+## ⚠️ Development Status
+
+This project is **actively in development**. While it provides a solid foundation for building micro SaaS applications, please note:
+
+- 🔄 Features may be added, removed, or changed
+- 🐛 Some features may have bugs or incomplete implementations
+- 📚 Documentation may be incomplete
+- 🔧 Breaking changes may occur in future versions
+
+We recommend:
+
+- ⭐ Star the repository to stay updated
+- 🐛 Report bugs and issues
+- 💡 Suggest features and improvements
+- 🤝 Contribute to make it better
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Built with ❤️ for the micro SaaS community**

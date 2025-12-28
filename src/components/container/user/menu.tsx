@@ -13,12 +13,19 @@ import {
 import { Text } from "@/components/ui/text";
 import { SignOut } from "@/components/features/sign-out";
 
-import { cn } from "@/lib/utils";
+import { avatarFallback, cn } from "@/lib/utils";
 import { useSession } from "@/lib/auth/client";
 import type { UserMenuProps } from "@/models/interfaces/components/user/menu";
 
 export function UserMenu({ className, ...props }: UserMenuProps) {
   const { data: session } = useSession();
+
+  const fallback = React.useMemo(() => {
+    return {
+      email: avatarFallback(session?.user?.email ?? ""),
+      name: avatarFallback(session?.user?.name ?? ""),
+    };
+  }, [session]);
 
   return (
     <div className={cn(className)} {...props}>
@@ -32,7 +39,7 @@ export function UserMenu({ className, ...props }: UserMenuProps) {
               />
 
               <AvatarFallback>
-                {session?.user?.name?.charAt(0) ?? "U"}
+                {fallback?.name ?? fallback?.email}
               </AvatarFallback>
             </Avatar>
           </button>
@@ -46,7 +53,7 @@ export function UserMenu({ className, ...props }: UserMenuProps) {
                   alt={session?.user?.name ?? undefined}
                 />
                 <AvatarFallback>
-                  {session?.user?.name?.charAt(0) ?? "U"}
+                  {fallback?.name ?? fallback?.email}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1">

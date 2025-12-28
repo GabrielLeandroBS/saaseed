@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { Combobox } from "@/components/container/generic/combobox";
-import { cn } from "@/lib/utils";
+import { avatarFallback, cn } from "@/lib/utils";
 import type { MembersProps } from "@/models/interfaces/components/generic/members";
 
 const Members = React.memo(function Members({
@@ -50,15 +50,6 @@ const Members = React.memo(function Members({
       },
     ];
   }, [translation?.dashboard?.members?.roles]);
-
-  const getInitials = React.useCallback((name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }, []);
 
   const handleRoleChange = React.useCallback(
     (memberId: string, newRole: MembersProps["members"][0]["role"]) => {
@@ -112,13 +103,10 @@ const Members = React.memo(function Members({
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage
-                    src={
-                      member.avatar ||
-                      `https://github.com/${member.name.toLowerCase().replace(/\s+/g, "")}.png`
-                    }
+                    src={member.avatar}
                     alt={`${member.name} avatar`}
                   />
-                  <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
+                  <AvatarFallback>{avatarFallback(member.name)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
                   <Text as="span" size="sm" weight="medium">

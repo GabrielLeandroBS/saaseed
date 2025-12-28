@@ -12,34 +12,5 @@ export interface AuthResponse {
   data: User;
 }
 
-export interface AuthSignInRequest {
-  email: string;
-  password: string;
-}
-
-export interface AuthSignUpRequest {
-  email: string;
-  password: string;
-  name: string;
-  surname: string;
-}
-
-export interface AuthForgotPasswordRequest {
-  email: string;
-}
-
-export interface AuthResetPasswordRequest {
-  token: string;
-  password: string;
-}
-
-export type AuthSignInResponse = AuthResponse;
-export type AuthSignUpResponse = {
-  access_token: string;
-  expires_in: number;
-  data: {
-    data: User;
-  };
-};
-export type AuthForgotPasswordResponse = AuthResponse;
-export type AuthResetPasswordResponse = AuthResponse;
+// Auth interfaces removed - using Better Auth with magic link and Google OAuth only
+// These interfaces are no longer needed as authentication is handled by Better Auth
