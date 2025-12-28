@@ -21,15 +21,17 @@ import {
 import { Text } from "@/components/ui/text";
 import { SignOut } from "@/components/features/sign-out";
 
+import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/auth/client";
+import type { NavUserProps } from "@/models/interfaces/components/sidebar/nav-user";
 
-export function NavUser() {
+export function NavUser({ className, ...props }: NavUserProps) {
   const { isMobile } = useSidebar();
 
   const { data: session } = useSession();
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className={cn(className)} {...props}>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -106,3 +108,5 @@ export function NavUser() {
     </SidebarMenu>
   );
 }
+
+NavUser.displayName = "NavUser";

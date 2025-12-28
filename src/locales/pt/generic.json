@@ -20,5 +20,10 @@
     "noResults": "Nenhum resultado encontrado.",
     "suggestions": "Sugestões",
     "ariaLabel": "Buscar"
+  },
+  "combobox": {
+    "placeholder": "Selecione uma opção...",
+    "searchPlaceholder": "Buscar...",
+    "emptyMessage": "Nenhum resultado encontrado."
   }
 }

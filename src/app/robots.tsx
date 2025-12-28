@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
-import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -13,10 +12,11 @@ export default function robots(): MetadataRoute.Robots {
           "/api/*",
           "/_next/*",
           "/static/*",
-          FrontendRoutesEnum.DASHBOARD + "/*",
-          FrontendRoutesEnum.SIGN_IN + "*",
-          FrontendRoutesEnum.SIGN_UP + "*",
-          FrontendRoutesEnum.FORGOT_PASSWORD,
+          "/*/dashboard/*",
+          "/*/sign-in",
+          "/*/sign-up",
+          "/*/forgot-password",
+          "/*/reset-password/*",
         ],
       },
     ],

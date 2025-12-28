@@ -7,7 +7,6 @@ export interface NavSecondaryItemProps {
   isActive?: boolean;
 }
 
-export interface NavSecondaryProps {
+export interface NavSecondaryProps extends React.HTMLAttributes<HTMLElement> {
   items: NavSecondaryItemProps[];
-  className?: string;
 }

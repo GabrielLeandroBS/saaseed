@@ -22,5 +22,10 @@
     "signInSuccess": "Sucesso, você está logado e iremos redirecioná-lo.",
     "userCreated": "Usuário criado com sucesso",
     "resetPasswordSuccess": "Senha redefinida com sucesso, você pode fechar esta página."
+  },
+  "notFound": {
+    "title": "404 - Página Não Encontrada",
+    "description": "A página que você está procurando não existe. Ela pode ter sido movida ou excluída.",
+    "returnHome": "Voltar para o Início"
   }
 }

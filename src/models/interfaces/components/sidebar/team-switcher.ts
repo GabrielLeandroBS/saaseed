@@ -1,5 +1,5 @@
 import { TeamData } from "./app-sidebar";
 
-export interface TeamSwitcherProps {
+export interface TeamSwitcherProps extends React.HTMLAttributes<HTMLElement> {
   teams: TeamData[];
 }

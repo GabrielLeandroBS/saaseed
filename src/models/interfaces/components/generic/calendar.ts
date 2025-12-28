@@ -21,10 +21,9 @@ export interface DateRangePickerTranslations {
   };
 }
 
-export interface DateRangePickerProps {
+export interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultRange?: DateRange;
   onRangeChange?: (range: DateRange | undefined) => void;
-  className?: string;
   locale?: LocaleType;
   translations: DateRangePickerTranslations;
 }

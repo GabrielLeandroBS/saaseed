@@ -125,6 +125,7 @@ function DateRangePicker({
   className,
   locale = "pt",
   translations,
+  ...props
 }: DateRangePickerProps) {
   const dateFnsLocale = React.useMemo(() => getDateFnsLocale(locale), [locale]);
   const dayPickerLocale = React.useMemo(
@@ -189,96 +190,104 @@ function DateRangePicker({
   }, []);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          id="date"
-          variant="outline"
-          className={cn(
-            "max-w-72 w-full justify-start text-left flex gap-2font-normal",
-            !date && "text-muted-foreground",
-            className,
-          )}
-        >
-          <CalendarIcon className="h-4 w-4" />
+    <div {...props}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant="outline"
+            className={cn(
+              "max-w-72 w-full justify-start text-left flex gap-2font-normal",
+              !date && "text-muted-foreground",
+              className,
+            )}
+          >
+            <CalendarIcon className="h-4 w-4" />
 
-          <div className="items-center gap-2 hidden md:flex">
-            {date?.from ? (
-              date.to ? (
-                <>
+            <div className="items-center gap-2 hidden md:flex">
+              {date?.from ? (
+                date.to ? (
+                  <>
+                    <Text as="span" size="sm">
+                      {format(date.from, "dd MMM yyyy", {
+                        locale: dateFnsLocale,
+                      })}
+                    </Text>
+                    <Text as="span" size="sm">
+                      {" "}
+                      -{" "}
+                    </Text>
+                    <Text as="span" size="sm">
+                      {format(date.to, "dd MMM yyyy", {
+                        locale: dateFnsLocale,
+                      })}
+                    </Text>
+                  </>
+                ) : (
                   <Text as="span" size="sm">
                     {format(date.from, "dd MMM yyyy", {
                       locale: dateFnsLocale,
                     })}
                   </Text>
-                  <Text as="span" size="sm">
-                    {" "}
-                    -{" "}
-                  </Text>
-                  <Text as="span" size="sm">
-                    {format(date.to, "dd MMM yyyy", { locale: dateFnsLocale })}
-                  </Text>
-                </>
+                )
               ) : (
-                <Text as="span" size="sm">
-                  {format(date.from, "dd MMM yyyy", { locale: dateFnsLocale })}
+                <Text as="span" size="sm" color="muted">
+                  {translations.pickDateRange}
                 </Text>
-              )
-            ) : (
-              <Text as="span" size="sm" color="muted">
-                {translations.pickDateRange}
-              </Text>
-            )}
-            <ChevronDownIcon className="ml-auto h-4 w-4 opacity-50" />
-          </div>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="end">
-        <div className="flex">
-          <div className="border-r p-2">
-            <div className="flex flex-col space-y-1">
-              {presets.map((preset) => {
-                const isActive = activePreset?.label === preset.label;
-                return (
-                  <button
-                    key={preset.label}
-                    type="button"
-                    onClick={() => handlePresetClick(preset)}
-                    className={cn(
-                      "rounded-md px-3 py-1.5 text-left transition-colors",
-                      isActive
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-accent hover:text-accent-foreground",
-                    )}
-                  >
-                    <Text
-                      as="span"
-                      size="sm"
-                      weight={isActive ? "medium" : "normal"}
-                      color={isActive ? "default" : "default"}
+              )}
+              <ChevronDownIcon className="ml-auto h-4 w-4 opacity-50" />
+            </div>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="end">
+          <div className="flex">
+            <div className="border-r p-2">
+              <div className="flex flex-col space-y-1">
+                {presets.map((preset) => {
+                  const isActive = activePreset?.label === preset.label;
+                  return (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => handlePresetClick(preset)}
+                      className={cn(
+                        "rounded-md px-3 py-1.5 text-left transition-colors",
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : "hover:bg-accent hover:text-accent-foreground",
+                      )}
                     >
-                      {preset.label}
-                    </Text>
-                  </button>
-                );
-              })}
+                      <Text
+                        as="span"
+                        size="sm"
+                        weight={isActive ? "medium" : "normal"}
+                        color={isActive ? "default" : "default"}
+                      >
+                        {preset.label}
+                      </Text>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="p-2">
+              <Calendar
+                mode="range"
+                month={month}
+                onMonthChange={setMonth}
+                selected={date}
+                onSelect={handleDateChange}
+                numberOfMonths={1}
+                locale={dayPickerLocale}
+              />
             </div>
           </div>
-          <div className="p-2">
-            <Calendar
-              mode="range"
-              month={month}
-              onMonthChange={setMonth}
-              selected={date}
-              onSelect={handleDateChange}
-              numberOfMonths={1}
-              locale={dayPickerLocale}
-            />
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
+
+DateRangePicker.displayName = "DateRangePicker";
 
 export { DateRangePicker };

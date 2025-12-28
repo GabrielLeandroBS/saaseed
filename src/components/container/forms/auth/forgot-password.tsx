@@ -141,3 +141,5 @@ export function ForgotPasswordForm({
     </div>
   );
 }
+
+ForgotPasswordForm.displayName = "ForgotPasswordForm";

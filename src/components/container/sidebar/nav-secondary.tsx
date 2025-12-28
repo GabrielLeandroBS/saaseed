@@ -8,11 +8,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+import { cn } from "@/lib/utils";
 import { NavSecondaryProps } from "@/models/interfaces/components/sidebar/nav-secondary";
 
-export function NavSecondary({ items, ...props }: NavSecondaryProps) {
+export function NavSecondary({
+  items,
+  className,
+  ...props
+}: NavSecondaryProps) {
   return (
-    <SidebarGroup {...props}>
+    <SidebarGroup className={cn(className)} {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -30,3 +35,5 @@ export function NavSecondary({ items, ...props }: NavSecondaryProps) {
     </SidebarGroup>
   );
 }
+
+NavSecondary.displayName = "NavSecondary";

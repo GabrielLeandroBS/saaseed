@@ -20,9 +20,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
 
+import { cn } from "@/lib/utils";
 import { TeamSwitcherProps } from "@/models/interfaces/components/sidebar/team-switcher";
 
-export function TeamSwitcher({ teams }: TeamSwitcherProps) {
+export function TeamSwitcher({
+  teams,
+  className,
+  ...props
+}: TeamSwitcherProps) {
   const { isMobile } = useSidebar();
   const [activeTeam, setActiveTeam] = React.useState(teams[0]);
 
@@ -31,7 +36,7 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
   }
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className={cn(className)} {...props}>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -98,3 +103,5 @@ export function TeamSwitcher({ teams }: TeamSwitcherProps) {
     </SidebarMenu>
   );
 }
+
+TeamSwitcher.displayName = "TeamSwitcher";

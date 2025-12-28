@@ -13,7 +13,7 @@ export interface NavMainItemProps {
   }[];
 }
 
-export interface NavMainProps {
+export interface NavMainProps extends React.HTMLAttributes<HTMLElement> {
   items: NavMainItemProps[];
   translation: DictionaryType;
 }

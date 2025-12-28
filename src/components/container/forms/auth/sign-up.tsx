@@ -27,11 +27,11 @@ import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { Text } from "@/components/ui/text";
 
+import { signIn } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
 import { AuthProps } from "@/models/interfaces/components/forms/auth";
 import { AuthSignUpSchema, AuthSignUpSchemaType } from "@/models/schemas/auth";
-import { SignUpService } from "@/services/entities/auth";
 
 export function SignUpForm({ className, translation, ...props }: AuthProps) {
   const [loading, setLoading] = React.useState(false);
@@ -40,7 +40,6 @@ export function SignUpForm({ className, translation, ...props }: AuthProps) {
     resolver: zodResolver(AuthSignUpSchema),
     defaultValues: {
       email: "",
-      password: "",
       name: "",
       surname: "",
     },
@@ -53,30 +52,44 @@ export function SignUpForm({ className, translation, ...props }: AuthProps) {
       return;
     }
 
-    const { email, password, name, surname } = validatedCredentials;
-
     setLoading(true);
 
-    const signUpPromise = new Promise((resolve, reject) => {
-      SignUpService({ email, password, name, surname })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((error) => {
-          reject(error.response.data.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    });
+    const signUpPromise = signIn
+      .magicLink({
+        email: validatedCredentials.email,
+        name: `${validatedCredentials.name} ${validatedCredentials.surname}`,
+        callbackURL: `/${FrontendRoutesEnum.DASHBOARD}`,
+      })
+      .then((result) => {
+        if (result.error) {
+          throw new Error(result.error.message || "Failed to send magic link");
+        }
+        return result;
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
     toast.promise(signUpPromise, {
       loading: translation?.generic.loading,
       success: () => {
-        return translation?.success.userCreated;
+        return (
+          translation?.success.userCreated ||
+          "Magic link sent! Check your email."
+        );
       },
-      error: () => {
-        return translation?.errors.userAlreadyExists;
+      error: (error: Error | string) => {
+        const errorMessage = typeof error === "string" ? error : error.message;
+        if (
+          errorMessage.includes("already exists") ||
+          errorMessage.includes("user")
+        ) {
+          return translation?.errors.userAlreadyExists;
+        }
+        return translation?.errors.failedRequest;
       },
     });
   };
@@ -148,28 +161,6 @@ export function SignUpForm({ className, translation, ...props }: AuthProps) {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <section className="flex items-center justify-between">
-                      <FormLabel>
-                        {translation?.authentication.password}
-                      </FormLabel>
-                    </section>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={translation.placeholder.password}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (
                   <LoadingSpinner />
@@ -181,7 +172,7 @@ export function SignUpForm({ className, translation, ...props }: AuthProps) {
               <Text as="div" size="sm" align="center">
                 {translation?.authentication.haveAccount}{" "}
                 <Link
-                  href={FrontendRoutesEnum.SIGN_IN}
+                  href={`/${FrontendRoutesEnum.SIGN_IN}`}
                   className="underline underline-offset-4"
                 >
                   {translation?.authentication.signIn}
@@ -204,3 +195,5 @@ export function SignUpForm({ className, translation, ...props }: AuthProps) {
     </div>
   );
 }
+
+SignUpForm.displayName = "SignUpForm";

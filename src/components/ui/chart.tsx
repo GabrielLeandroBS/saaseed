@@ -69,7 +69,7 @@ function ChartContainer({
   );
 }
 
-function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color,
   );
@@ -100,7 +100,7 @@ ${colorConfig
       }}
     />
   );
-}
+};
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 

@@ -13,10 +13,9 @@ export interface SearchRenderProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export interface SearchProps {
+export interface SearchProps extends React.HTMLAttributes<HTMLDivElement> {
   translations: SearchTranslations;
   shortcutKey?: string;
   onOpenChange?: (open: boolean) => void;
-  className?: string;
   children?: ReactNode | ((props: SearchRenderProps) => ReactNode);
 }

@@ -3,7 +3,6 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,7 +18,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,13 +34,7 @@ import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
 import { AuthProps } from "@/models/interfaces/components/forms/auth";
 import { AuthSignInSchema, AuthSignInSchemaType } from "@/models/schemas/auth";
 
-export function SignInForm({
-  className,
-  translation,
-  lang = "pt",
-  ...props
-}: AuthProps) {
-  const router = useRouter();
+export function SignInForm({ className, translation, ...props }: AuthProps) {
   const [loading, setLoading] = React.useState(false);
   const [googleLoading, setGoogleLoading] = React.useState(false);
 
@@ -50,7 +42,6 @@ export function SignInForm({
     resolver: zodResolver(AuthSignInSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -64,13 +55,13 @@ export function SignInForm({
     setLoading(true);
 
     const signInPromise = signIn
-      .email({
+      .magicLink({
         email: data.email,
-        password: data.password,
+        callbackURL: `/${FrontendRoutesEnum.DASHBOARD}`,
       })
       .then((result) => {
         if (result.error) {
-          throw new Error(result.error.message || "Sign-in failed");
+          throw new Error(result.error.message || "Failed to send magic link");
         }
         return result;
       })
@@ -84,13 +75,15 @@ export function SignInForm({
     toast.promise(signInPromise, {
       loading: translation?.generic.loading,
       success: () => {
-        router.push(`/${lang}${FrontendRoutesEnum.DASHBOARD}`);
-        return translation?.success.signInSuccess;
+        return (
+          translation?.success.signInSuccess ||
+          "Magic link sent! Check your email."
+        );
       },
       error: (error: Error | string) => {
         const errorMessage = typeof error === "string" ? error : error.message;
         if (
-          errorMessage === "Sign-in failed" ||
+          errorMessage === "Failed to send magic link" ||
           errorMessage.includes("Invalid")
         ) {
           return translation?.errors.signInFailed;
@@ -107,7 +100,7 @@ export function SignInForm({
     try {
       await signIn.social({
         provider: "google",
-        callbackURL: `/${lang}${FrontendRoutesEnum.DASHBOARD}`,
+        callbackURL: `/${FrontendRoutesEnum.DASHBOARD}`,
       });
     } catch (error) {
       toast.error(
@@ -144,33 +137,6 @@ export function SignInForm({
                     <FormControl>
                       <Input
                         placeholder={translation?.placeholder.email}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <section className="flex items-center justify-between">
-                      <FormLabel>
-                        {translation?.authentication.password}
-                      </FormLabel>
-                      <Link href={FrontendRoutesEnum.FORGOT_PASSWORD}>
-                        <FormDescription className="text-right">
-                          {translation?.authentication.forgotPassword}
-                        </FormDescription>
-                      </Link>
-                    </section>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={translation?.placeholder.password}
                         {...field}
                       />
                     </FormControl>
@@ -245,7 +211,7 @@ export function SignInForm({
               <Text as="div" size="sm" align="center">
                 {translation?.authentication.dontHaveAccount}{" "}
                 <Link
-                  href={FrontendRoutesEnum.SIGN_UP}
+                  href={`/${FrontendRoutesEnum.SIGN_UP}`}
                   className="underline underline-offset-4"
                 >
                   {translation?.authentication.createAccount}
@@ -268,3 +234,5 @@ export function SignInForm({
     </div>
   );
 }
+
+SignInForm.displayName = "SignInForm";

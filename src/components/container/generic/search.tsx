@@ -12,12 +12,13 @@ import { cn } from "@/lib/utils";
 import { type SearchProps } from "@/models/interfaces/components/generic/search";
 import { COMMAND_SHORTCUT_KEY } from "@/models/interfaces/components/dashboard/header";
 
-function Search({
+const Search = React.memo(function Search({
   translations,
   shortcutKey = COMMAND_SHORTCUT_KEY,
   onOpenChange,
   className,
   children,
+  ...props
 }: SearchProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -33,32 +34,39 @@ function Search({
     handleOpenChange(true);
   }, [handleOpenChange]);
 
-  React.useEffect(() => {
-    const down = (e: KeyboardEvent) => {
+  const handleKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
       if (e.key === shortcutKey && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        handleOpenChange(!open);
+        setOpen((prev) => {
+          const newOpen = !prev;
+          onOpenChange?.(newOpen);
+          return newOpen;
+        });
       }
-    };
+    },
+    [shortcutKey, onOpenChange],
+  );
 
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, [shortcutKey, open, handleOpenChange]);
+  React.useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <>
-      <div className={className}>
+      <div className={cn(className, "w-full lg:max-w-80")} {...props}>
         <Button
           variant="ghost"
           size="icon"
           onClick={handleOpen}
           aria-label={translations.ariaLabel}
-          className="block md:hidden"
+          className="block lg:hidden"
         >
           <SearchIcon className="h-4 w-4" />
         </Button>
 
-        <div className="relative w-full md:max-w-40 lg:max-w-80 hidden md:block">
+        <div className="relative w-full hidden lg:block">
           <div className="relative">
             <SearchIcon
               className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
@@ -87,6 +95,8 @@ function Search({
         : children}
     </>
   );
-}
+});
+
+Search.displayName = "Search";
 
 export { Search };

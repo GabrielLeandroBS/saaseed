@@ -21,5 +21,10 @@
     "signInSuccess": "Success, you are logged in and we will redirect you.",
     "userCreated": "User created successfully",
     "resetPasswordSuccess": "Password reset successfully, you can close this page."
+  },
+  "notFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you're looking for doesn't exist. It may have been moved or deleted.",
+    "returnHome": "Return Home"
   }
 }

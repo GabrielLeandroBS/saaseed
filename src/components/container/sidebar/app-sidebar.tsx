@@ -37,3 +37,5 @@ export function AppSidebar({ translation, ...props }: SidebarProps) {
     </Sidebar>
   );
 }
+
+AppSidebar.displayName = "AppSidebar";

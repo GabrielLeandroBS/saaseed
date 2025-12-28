@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
-import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
 
 type ChangeFreq =
   | "always"
@@ -12,23 +11,20 @@ type ChangeFreq =
   | "yearly"
   | "never";
 
+const locales = ["pt", "en"];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
-    {
-      url: siteConfig.siteUrl,
+  const routes: MetadataRoute.Sitemap = [];
+
+  // Adiciona rotas para cada locale
+  for (const locale of locales) {
+    routes.push({
+      url: `${siteConfig.siteUrl}/${locale}`,
       lastModified: new Date(),
       changeFrequency: "daily" as ChangeFreq,
       priority: 1,
-    },
-  ];
+    });
+  }
 
-  const filteredRoutes = routes.filter(
-    (route) =>
-      !route.url.includes(FrontendRoutesEnum.SIGN_IN) &&
-      !route.url.includes(FrontendRoutesEnum.SIGN_UP) &&
-      !route.url.includes(FrontendRoutesEnum.FORGOT_PASSWORD) &&
-      !route.url.includes(FrontendRoutesEnum.DASHBOARD),
-  );
-
-  return filteredRoutes;
+  return routes;
 }

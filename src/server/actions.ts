@@ -1,27 +1,20 @@
 "use server";
 
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 
-/**
- * Get the current session on the server
- * Use this in server components or server actions
- */
-export async function getSession() {
+export const getSession = cache(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   return session;
-}
+});
 
-/**
- * Require authentication - redirects to sign-in if not authenticated
- * Use this in server components or server actions that require auth
- */
-export async function requireAuth() {
+export const requireAuth = cache(async () => {
   const session = await getSession();
 
   if (!session) {
@@ -29,11 +22,8 @@ export async function requireAuth() {
   }
 
   return session;
-}
+});
 
-/**
- * Sign in with email and password
- */
 export async function signInEmail(email: string, password: string) {
   const result = await auth.api.signInEmail({
     body: {
@@ -45,9 +35,6 @@ export async function signInEmail(email: string, password: string) {
   return result;
 }
 
-/**
- * Sign up with email and password
- */
 export async function signUpEmail(
   email: string,
   password: string,
@@ -69,9 +56,6 @@ export async function signUpEmail(
   return result;
 }
 
-/**
- * Sign out the current user
- */
 export async function signOut() {
   await auth.api.signOut({
     headers: await headers(),

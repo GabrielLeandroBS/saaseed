@@ -19,5 +19,10 @@
     "noResults": "No results found.",
     "suggestions": "Suggestions",
     "ariaLabel": "Search"
+  },
+  "combobox": {
+    "placeholder": "Select option...",
+    "searchPlaceholder": "Search...",
+    "emptyMessage": "No results found."
   }
 }

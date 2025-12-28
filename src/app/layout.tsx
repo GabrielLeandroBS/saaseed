@@ -13,6 +13,8 @@ const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 export const metadata: Metadata = {
@@ -64,7 +66,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "google-site-verification-code", // You'll need to add the actual verification code here
+    google: "google-site-verification-code",
   },
 };
 

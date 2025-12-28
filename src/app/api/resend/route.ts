@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { resend } from "@/server/resend";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const maxDuration = 10;
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -27,7 +31,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ data, success: true }, { status: 200 });
-  } catch {
+  } catch (error) {
+    console.error("Resend API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

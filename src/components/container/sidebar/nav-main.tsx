@@ -21,11 +21,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
 
+import { cn } from "@/lib/utils";
 import { NavMainProps } from "@/models/interfaces/components/sidebar/nav-main";
 
-export function NavMain({ items, translation }: NavMainProps) {
+export function NavMain({
+  items,
+  translation,
+  className,
+  ...props
+}: NavMainProps) {
   return (
-    <SidebarGroup>
+    <SidebarGroup className={cn(className)} {...props}>
       <SidebarGroupLabel>{translation.sidebar.navMain.title}</SidebarGroupLabel>
 
       <SidebarMenu>
@@ -70,3 +76,5 @@ export function NavMain({ items, translation }: NavMainProps) {
     </SidebarGroup>
   );
 }
+
+NavMain.displayName = "NavMain";
