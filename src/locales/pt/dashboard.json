@@ -1,31 +1,3 @@
 {
-  "title": "Dashboard",
-  "members": {
-    "title": "Membros da Equipe",
-    "description": "Convide os membros da sua equipe para colaborar.",
-    "roles": {
-      "viewer": {
-        "label": "Visualizador",
-        "description": "Pode visualizar e comentar."
-      },
-      "developer": {
-        "label": "Desenvolvedor",
-        "description": "Pode visualizar, comentar e editar."
-      },
-      "billing": {
-        "label": "Faturamento",
-        "description": "Pode visualizar, comentar e gerenciar faturamento."
-      },
-      "owner": {
-        "label": "Proprietário",
-        "description": "Acesso de nível de administrador a todos os recursos."
-      }
-    },
-    "searchPlaceholder": "Selecione novo cargo...",
-    "emptyMessage": "Nenhum cargo encontrado."
-  },
-  "subscriptions": {
-    "title": "Assinaturas",
-    "description": "Acompanhe o crescimento e as tendências das suas assinaturas."
-  }
+  "title": "Dashboard"
 }

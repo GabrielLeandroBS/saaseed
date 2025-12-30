@@ -1,22 +1,5 @@
-import type { SubscriptionsCardData } from "@/models/interfaces/components/generic/card/subscriptions";
 import type { RevenueCardData } from "@/models/interfaces/components/generic/card/revenue";
 import type { ExerciseMinutesCardData } from "@/models/interfaces/components/generic/card/exercise-minutes";
-
-export const getSubscriptionsCardMock = (): SubscriptionsCardData => ({
-  value: 4850,
-  change: 180.1,
-  changeLabel: "from last month",
-  chartData: [
-    { month: "Jan", value: 240 },
-    { month: "Feb", value: 300 },
-    { month: "Mar", value: 200 },
-    { month: "Apr", value: 278 },
-    { month: "May", value: 189 },
-    { month: "Jun", value: 239 },
-    { month: "Jul", value: 278 },
-    { month: "Aug", value: 189 },
-  ],
-});
 
 export const getRevenueCardMock = (): RevenueCardData => ({
   value: "$15,231.89",
