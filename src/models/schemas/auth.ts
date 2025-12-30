@@ -6,8 +6,6 @@ const AuthSignInSchema = z.object({
 
 const AuthSignUpSchema = z.object({
   email: z.string().email(),
-  name: z.string().min(2),
-  surname: z.string().min(2),
 });
 
 type AuthSignInSchemaType = z.infer<typeof AuthSignInSchema>;

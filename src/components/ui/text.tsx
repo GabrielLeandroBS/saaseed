@@ -22,13 +22,6 @@ const textVariants = cva("", {
       semibold: "font-semibold",
       bold: "font-bold",
     },
-    color: {
-      default: "text-foreground",
-      muted: "text-muted-foreground",
-      destructive: "text-destructive",
-      primary: "text-primary",
-      secondary: "text-secondary-foreground",
-    },
     align: {
       left: "text-left",
       center: "text-center",
@@ -57,7 +50,6 @@ const textVariants = cva("", {
   defaultVariants: {
     size: "base",
     weight: "normal",
-    color: "default",
     align: "left",
     leading: "normal",
     tracking: "normal",
@@ -81,7 +73,6 @@ function Text({
   asChild = false,
   size,
   weight,
-  color,
   align,
   leading,
   tracking,
@@ -98,14 +89,12 @@ function Text({
       data-slot="text"
       data-size={size}
       data-weight={weight}
-      data-color={color}
       data-align={align}
       data-tracking={tracking}
       className={cn(
         textVariants({
           size,
           weight,
-          color,
           align,
           leading,
           tracking,

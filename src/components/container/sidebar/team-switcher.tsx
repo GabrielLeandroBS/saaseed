@@ -71,7 +71,7 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel>
-              <Text size="xs" color="muted">
+              <Text size="xs" className="text-muted-foreground">
                 Teams
               </Text>
             </DropdownMenuLabel>
@@ -93,7 +93,7 @@ export function TeamSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              <Text color="muted" weight="medium">
+              <Text className="text-muted-foreground" weight="medium">
                 Add team
               </Text>
             </DropdownMenuItem>

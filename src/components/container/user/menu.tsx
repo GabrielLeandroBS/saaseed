@@ -69,9 +69,8 @@ export function UserMenu({ className, ...props }: UserMenuProps) {
                 <Text
                   as="span"
                   size="xs"
-                  color="muted"
+                  className="text-muted-foreground truncate"
                   leading="tight"
-                  className="truncate"
                 >
                   {session?.user?.email ?? ""}
                 </Text>

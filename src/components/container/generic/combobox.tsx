@@ -122,7 +122,11 @@ const Combobox = React.memo(function Combobox({
                         {option.label}
                       </Text>
                       {option.description && (
-                        <Text as="p" size="sm" color="muted">
+                        <Text
+                          as="p"
+                          size="sm"
+                          className="text-muted-foreground"
+                        >
                           {option.description}
                         </Text>
                       )}

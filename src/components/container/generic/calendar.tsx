@@ -231,7 +231,7 @@ function DateRangePicker({
                   </Text>
                 )
               ) : (
-                <Text as="span" size="sm" color="muted">
+                <Text as="span" size="sm" className="text-muted-foreground">
                   {translations.pickDateRange}
                 </Text>
               )}
@@ -261,7 +261,6 @@ function DateRangePicker({
                         as="span"
                         size="sm"
                         weight={isActive ? "medium" : "normal"}
-                        color={isActive ? "default" : "default"}
                       >
                         {preset.label}
                       </Text>

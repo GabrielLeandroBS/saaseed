@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SignUpForm } from "@/components/container/forms/auth/sign-up";
+import { AuthForm } from "@/components/container/forms/auth/auth-form";
 
 import { siteConfig } from "@/config/site";
 import { getDictionary } from "@/lib/get/dictionaries";
@@ -24,5 +24,5 @@ export default async function SignUpPage({ params }: ParamsProps) {
 
   const dict = await getDictionary(lang);
 
-  return <SignUpForm translation={dict} lang={lang} />;
+  return <AuthForm mode="sign-up" translation={dict} lang={lang} />;
 }
