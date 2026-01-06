@@ -14,3 +14,4 @@ import { NextResponse } from "next/server";
 export type ValidationResult<T> =
   | { success: true; data: T }
   | { success: false; response: NextResponse };
+

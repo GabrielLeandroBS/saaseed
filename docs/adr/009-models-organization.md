@@ -347,3 +347,4 @@ import {
 - [TypeScript Handbook - Types vs Interfaces](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces)
 - [Zod Documentation](https://zod.dev/)
 - [TypeScript Best Practices](https://typescript-eslint.io/rules/)
+

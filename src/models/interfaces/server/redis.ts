@@ -12,3 +12,4 @@ export interface RateLimitConfig {
   windowMs: number;
   message?: string;
 }
+

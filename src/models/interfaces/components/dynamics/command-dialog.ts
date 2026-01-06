@@ -22,3 +22,4 @@ export interface CommandDialogWrapperProps {
   suggestionsHeading: string;
   suggestions: CommandDialogSuggestion[];
 }
+

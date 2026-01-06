@@ -85,3 +85,4 @@ export function captureMessage(
     Sentry.captureMessage(message);
   });
 }
+

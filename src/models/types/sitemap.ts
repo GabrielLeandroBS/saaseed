@@ -15,3 +15,4 @@ export type ChangeFreq =
   | "monthly"
   | "yearly"
   | "never";
+

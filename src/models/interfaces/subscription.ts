@@ -28,3 +28,4 @@ export interface PlanChecks {
   isTrialExpiredWithoutActivePlan: boolean;
   needsPayment: boolean;
 }
+
