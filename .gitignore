@@ -142,3 +142,5 @@ vite.config.ts.timestamp-*
 playwright-report/
 test-results/
 playwright/.cache/
+.vercel
+.env*.local
