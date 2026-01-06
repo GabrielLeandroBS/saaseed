@@ -124,4 +124,3 @@ export function getDateFnsLocale(locale: LocaleType) {
 export function getDayPickerLocale(locale: LocaleType) {
   return locale === "pt" ? ptBRDayPicker : enUSDayPicker;
 }
-

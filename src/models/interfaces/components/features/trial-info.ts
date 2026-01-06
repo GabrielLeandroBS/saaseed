@@ -45,4 +45,3 @@ export interface GetTrialContentParams {
   isTrialExpiredWithoutActivePlan: boolean;
   translation?: TrialInfoProps["translation"];
 }
-

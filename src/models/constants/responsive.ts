@@ -8,4 +8,3 @@
  * Breakpoint for mobile devices (in pixels)
  */
 export const MOBILE_BREAKPOINT = 768;
-

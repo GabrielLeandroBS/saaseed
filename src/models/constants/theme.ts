@@ -14,4 +14,3 @@ export const THEME_ICONS: Record<string, LucideIcon> = {
   light: Moon,
   dark: Sun,
 } as const;
-

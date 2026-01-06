@@ -11,4 +11,3 @@ export interface AuthLayoutProps {
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }
-

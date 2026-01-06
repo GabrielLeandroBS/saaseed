@@ -12,4 +12,3 @@ import type { User } from "@supabase/supabase-js";
 export type UserResult =
   | { user: User; error?: never }
   | { user?: never; error: Error };
-

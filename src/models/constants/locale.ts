@@ -15,4 +15,3 @@ export const SUPPORTED_LOCALES: readonly LocaleType[] = ["pt", "en"] as const;
  * Default locale
  */
 export const DEFAULT_LOCALE: LocaleType = "pt";
-

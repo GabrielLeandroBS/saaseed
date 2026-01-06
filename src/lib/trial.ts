@@ -93,4 +93,3 @@ export function getTrialContent({
     className: "font-semibold",
   };
 }
-

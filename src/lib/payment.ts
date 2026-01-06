@@ -24,4 +24,3 @@ export function formatAmount({
     currency: currency.toUpperCase(),
   }).format(amount / 100);
 }
-

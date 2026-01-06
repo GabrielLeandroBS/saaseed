@@ -135,4 +135,3 @@ export function calculateSubscriptionStates(
     planChecks,
   };
 }
-

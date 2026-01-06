@@ -12,4 +12,3 @@ import type Stripe from "stripe";
 export type CustomerResult =
   | { customer: Stripe.Customer; error?: never }
   | { customer?: never; error: Error };
-
