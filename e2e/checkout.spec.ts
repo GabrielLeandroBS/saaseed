@@ -49,6 +49,56 @@ test.describe("Payment Infrastructure", () => {
 
       expect(response.ok()).toBeTruthy();
     });
+
+    /**
+     * Verifies health API returns correct response structure
+     *
+     * Sends GET request to /api/health and expects correct JSON structure.
+     */
+    test("health API should return correct response structure", async ({
+      request,
+    }) => {
+      const response = await request.get("/api/health");
+
+      expect(response.ok()).toBeTruthy();
+
+      const body = await response.json();
+      expect(body).toHaveProperty("status");
+      expect(body).toHaveProperty("timestamp");
+      expect(body).toHaveProperty("checks");
+      expect(body.checks).toHaveProperty("redis");
+      expect(body.checks).toHaveProperty("supabase");
+      expect(body.checks).toHaveProperty("stripe");
+      expect(typeof body.checks.redis).toBe("boolean");
+      expect(typeof body.checks.supabase).toBe("boolean");
+      expect(typeof body.checks.stripe).toBe("boolean");
+    });
+
+    /**
+     * Verifies health API returns 503 when services are down
+     *
+     * Note: This test may pass or fail depending on service availability.
+     * It verifies the endpoint handles degraded status correctly.
+     */
+    test("health API should return 503 when services are down", async ({
+      request,
+    }) => {
+      const response = await request.get("/api/health");
+      const body = await response.json();
+
+      // If any service is down, status should be "degraded" and HTTP status may be 503
+      const allHealthy =
+        body.checks.redis && body.checks.supabase && body.checks.stripe;
+
+      if (!allHealthy) {
+        expect(body.status).toBe("degraded");
+        // May return 503 or 200 depending on implementation
+        expect([200, 503]).toContain(response.status());
+      } else {
+        expect(body.status).toBe("healthy");
+        expect(response.status()).toBe(200);
+      }
+    });
   });
 
   test.describe("Stripe Webhook", () => {

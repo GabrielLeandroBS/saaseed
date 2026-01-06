@@ -14,6 +14,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --headed --workers=1 --timeout=0",
     "test:e2e:report": "playwright show-report",
+    "test:e2e:coverage": "tsx scripts/check-e2e-coverage.ts",
     "auth:generate": "npx @better-auth/cli generate",
     "db:link": "supabase link --project-ref rktlpldzytrnlyepzhxk",
     "db:migration:new": "supabase migration new",

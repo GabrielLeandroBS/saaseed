@@ -18,6 +18,7 @@ Architecture Decision Records (ADRs) are short documents that capture important 
 | [006](./006-monitoring-sentry.md)          | Sentry for Monitoring           | Accepted | 2024-01 |
 | [007](./007-i18n-strategy.md)              | Internationalization Strategy   | Accepted | 2024-01 |
 | [008](./008-state-management.md)           | State Management                | Accepted | 2024-01 |
+| [009](./009-models-organization.md)        | Models Organization             | Accepted | 2024-01 |
 
 ## Template
 
