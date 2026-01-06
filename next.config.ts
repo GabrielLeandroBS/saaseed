@@ -10,6 +10,7 @@ const isDevelopment = env.NODE_ENV === "development";
  *
  * Defines trusted sources for scripts, styles, images, and other resources.
  * Uses 'unsafe-inline' for styles (required by Tailwind CSS).
+ * Uses 'unsafe-inline' for scripts (required by Next.js, Vercel Analytics, SpeedInsights).
  * Uses 'unsafe-eval' in development for hot reload.
  */
 const cspDirectives = {
@@ -18,6 +19,10 @@ const cspDirectives = {
     "'self'",
     "https://js.stripe.com",
     "https://accounts.google.com",
+    // Required for Next.js inline scripts (e.g., Vercel Analytics, SpeedInsights)
+    // These services generate scripts dynamically, so we need 'unsafe-inline'
+    // Note: Cannot use hashes with 'unsafe-inline' - browser ignores 'unsafe-inline' if hash is present
+    "'unsafe-inline'",
     ...(isDevelopment ? ["'unsafe-eval'"] : []),
   ],
   "style-src": ["'self'", "'unsafe-inline'"],
@@ -37,7 +42,8 @@ const cspDirectives = {
     "https://accounts.google.com",
     "https://*.sentry.io",
     "https://*.ingest.sentry.io",
-    ...(isDevelopment ? ["ws://localhost:3000"] : []),
+    // WebSocket connections for Next.js HMR and Turbopack in development
+    ...(isDevelopment ? ["ws://localhost:3000", "ws://127.0.0.1:3000"] : []),
   ],
   "frame-src": [
     "'self'",
