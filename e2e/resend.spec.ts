@@ -186,7 +186,7 @@ test.describe("Resend Email API", () => {
       const responses = await Promise.all(requests);
 
       // At least one should be rate limited (429)
-      const rateLimited = responses.some((r) => r.status() === 429);
+      responses.some((r) => r.status() === 429);
       // This is expected behavior, but may not always trigger in test environment
       // So we just verify the endpoint is responding
       expect(responses.length).toBe(10);

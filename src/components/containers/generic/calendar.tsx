@@ -19,9 +19,7 @@ import { cn } from "@/lib/utils";
 import {
   type DateRangePreset,
   type DateRangePickerProps,
-  type DateRangePickerTranslations,
 } from "@/models/interfaces/components/generic/calendar";
-import { LocaleType } from "@/models/types/locale";
 import {
   getPresets,
   getDateFnsLocale,
