@@ -45,8 +45,6 @@ const textVariants = cva("", {
       widest: "tracking-widest",
     },
   },
-  // Sem compound variants - mais performático
-  // Use size diretamente: size="xl" para text-xl, size="2xl" para text-2xl
   defaultVariants: {
     size: "base",
     weight: "normal",
@@ -99,7 +97,7 @@ function Text({
           leading,
           tracking,
           className,
-        }),
+        })
       )}
       {...props}
     />

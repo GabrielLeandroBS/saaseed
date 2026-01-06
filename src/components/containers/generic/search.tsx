@@ -1,0 +1,112 @@
+"use client";
+
+import * as React from "react";
+import { Command, SearchIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Kbd } from "@/components/ui/kbd";
+import { Text } from "@/components/ui/text";
+
+import { cn } from "@/lib/utils";
+
+import { type SearchProps } from "@/models/interfaces/components/generic/search";
+import { COMMAND_SHORTCUT_KEY } from "@/models/constants/dashboard";
+
+/**
+ * Search component with command dialog integration
+ *
+ * Provides search functionality with keyboard shortcut support.
+ * Opens CommandDialog when activated via shortcut or click.
+ *
+ * @param translations - Translation dictionary for search labels
+ * @param shortcutKey - Keyboard shortcut to trigger search (default: "k")
+ * @param onOpenChange - Optional callback when dialog open state changes
+ * @param children - Render function receiving dialog state and handlers
+ */
+export function Search({
+  translations,
+  shortcutKey = COMMAND_SHORTCUT_KEY,
+  onOpenChange,
+  className,
+  children,
+  ...props
+}: SearchProps) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      setOpen(newOpen);
+      onOpenChange?.(newOpen);
+    },
+    [onOpenChange]
+  );
+
+  const handleOpen = React.useCallback(() => {
+    handleOpenChange(true);
+  }, [handleOpenChange]);
+
+  const handleKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === shortcutKey && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => {
+          const newOpen = !prev;
+          onOpenChange?.(newOpen);
+          return newOpen;
+        });
+      }
+    },
+    [shortcutKey, onOpenChange]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  return (
+    <>
+      <div className={cn(className, "w-full lg:max-w-80")} {...props}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleOpen}
+          aria-label={translations.ariaLabel}
+          className="block lg:hidden"
+        >
+          <SearchIcon className="h-4 w-4" />
+        </Button>
+
+        <div className="relative w-full hidden lg:block">
+          <div className="relative">
+            <SearchIcon
+              className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+              aria-hidden="true"
+            />
+
+            <Input
+              type="search"
+              placeholder={translations.placeholder}
+              className={cn("w-full pl-10 pr-4")}
+              onFocus={handleOpen}
+              onClick={handleOpen}
+            />
+            <Kbd className="pointer-events-none absolute top-1/2 right-2 hidden -translate-y-1/2 items-center gap-0.5 rounded-sm bg-zinc-200 p-1 font-mono sm:flex dark:bg-neutral-700">
+              <Command className="size-3" aria-hidden="true" />
+              <Text as="span" size="xs" weight="medium">
+                {shortcutKey}
+              </Text>
+            </Kbd>
+          </div>
+        </div>
+      </div>
+
+      {typeof children === "function"
+        ? children({ open, onOpenChange: handleOpenChange })
+        : children}
+    </>
+  );
+}
+
+Search.displayName = "Search";

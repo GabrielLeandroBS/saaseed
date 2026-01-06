@@ -1,12 +1,21 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun } from "lucide-react";
+import { Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import { THEME_ICONS } from "@/models/constants/theme";
 
-export const ThemeToggle = React.memo(function ThemeToggle() {
+/**
+ * Theme toggle button component
+ *
+ * Allows users to switch between light and dark themes.
+ * Uses next-themes for theme management and prevents hydration mismatch.
+ *
+ * @returns Button component for theme switching
+ */
+export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -15,8 +24,12 @@ export const ThemeToggle = React.memo(function ThemeToggle() {
   }, []);
 
   const handleToggle = React.useCallback(() => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const nextTheme = theme === "light" ? "dark" : "light";
+    setTheme(nextTheme);
   }, [theme, setTheme]);
+
+  const Icon =
+    mounted && theme && theme in THEME_ICONS ? THEME_ICONS[theme] : Sun;
 
   if (!mounted) {
     return (
@@ -34,14 +47,10 @@ export const ThemeToggle = React.memo(function ThemeToggle() {
       className="h-9 w-9"
       onClick={handleToggle}
     >
-      {theme === "light" ? (
-        <Moon className="h-4 w-4" />
-      ) : (
-        <Sun className="h-4 w-4" />
-      )}
+      <Icon className="h-4 w-4" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
-});
+}
 
 ThemeToggle.displayName = "ThemeToggle";

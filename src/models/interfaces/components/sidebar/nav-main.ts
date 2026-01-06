@@ -1,7 +1,16 @@
+/**
+ * Nav main interfaces
+ *
+ * Interfaces for main navigation component props.
+ */
+
 import { LucideIcon } from "lucide-react";
 
-import { DictionaryType } from "@/lib/get/dictionaries";
+import type { DictionaryType } from "@/models/types/i18n";
 
+/**
+ * Navigation item configuration
+ */
 export interface NavMainItemProps {
   title: string;
   url: string;
@@ -13,6 +22,9 @@ export interface NavMainItemProps {
   }[];
 }
 
+/**
+ * Props for NavMain component
+ */
 export interface NavMainProps extends React.HTMLAttributes<HTMLElement> {
   items: NavMainItemProps[];
   translation: DictionaryType;

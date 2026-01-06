@@ -26,8 +26,9 @@
 
 This project is currently in **active development** and includes:
 
-- 🔐 **Complete authentication system** with Better Auth
-- 💾 **Database integration** with Supabase (PostgreSQL)
+- 🔐 **Complete authentication system** with Better Auth (stateless)
+- 👤 **User management** with Supabase Auth
+- 💳 **Payment processing** with Stripe (subscriptions and trials)
 - 🌍 **Internationalization** (i18n) support
 - 🎨 **Modern UI/UX** with Shadcn/UI components
 - 📊 **Dashboard** with analytics and data visualization
@@ -70,10 +71,9 @@ Perfect for entrepreneurs and developers who want to focus on building their pro
 
 ### Database & Backend
 
-- 🐘 [Supabase](https://supabase.com/) - Open source Firebase alternative with PostgreSQL
-- 🗄️ [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM for database management
+- 🐘 [Supabase](https://supabase.com/) - Open source Firebase alternative with PostgreSQL (Auth only)
 - 📧 [Resend](https://resend.com/) - Email API for transactional emails
-- 🔌 [Postgres.js](https://github.com/porsager/postgres) - Fast PostgreSQL client
+- 💳 [Stripe](https://stripe.com/) - Payment processing and subscription management
 
 ### Internationalization
 
@@ -104,11 +104,13 @@ pnpm install
 
 3. Set up environment variables
 
-Copy the `.env.example` file to `.env.local`:
+Copy the `env.example.txt` file to `.env.local`:
 
 ```bash
-cp .env.example .env.local
+cp env.example.txt .env.local
 ```
+
+Or create `.env.local` manually using `env.example.txt` as a reference.
 
 Then update the values in `.env.local` with your actual credentials:
 
@@ -117,22 +119,34 @@ Then update the values in `.env.local` with your actual credentials:
 BETTER_AUTH_SECRET=your_secret_key_min_32_characters
 BETTER_AUTH_URL=http://localhost:3000
 
-# Supabase Database (Required)
-DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
+# Google OAuth (Required)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Supabase Auth (Required)
+NEXT_PUBLIC_SUPABASE_URL=https://[project-ref].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Stripe (Required)
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_DEFAULT_PRICE_ID=price_your_default_price_id
+
+# Resend (Required)
+RESEND_API_KEY=re_your_resend_api_key
+RESEND_FROM_EMAIL=noreply@yourdomain.com
 
 # API URL (Required)
 NEXT_PUBLIC_API_URL=http://localhost:3000
-
-# Supabase API (Optional - only if using Storage/Realtime)
-# NEXT_PUBLIC_SUPABASE_URL=https://[project-ref].supabase.co
-# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 **Important:**
 
 - Generate `BETTER_AUTH_SECRET` with: `openssl rand -base64 32`
-- Get `DATABASE_URL` from: Supabase Dashboard > Settings > Database > Connection string
-- Replace `[password]` with your Supabase database password
+- Get Supabase credentials from: Supabase Dashboard > Settings > API
+- Get Stripe credentials from: Stripe Dashboard > Developers > API keys
+- Get `STRIPE_DEFAULT_PRICE_ID` from: Stripe Dashboard > Products > Your Product > Pricing
+- Get Resend API key from: Resend Dashboard > API Keys
 
 4. Run the development server
 
@@ -154,7 +168,38 @@ pnpm start
 
 ## 🌐 Internationalization
 
-The project uses i18next for complete multi-language support. Translations are managed through JSON files located in `src/locales/`.
+The project uses a custom i18n strategy based on JSON dictionaries and route segments for complete multi-language support.
+
+### Features
+
+- **Route-based localization** - URLs include locale (`/en/dashboard`, `/pt/dashboard`)
+- **JSON dictionaries** - Translation files organized by namespace in `src/locales/`
+- **Zod i18n integration** - Form validation messages automatically translated
+- **Cookie persistence** - Language preference stored in `NEXT_LOCALE` cookie
+- **Type-safe translations** - Full TypeScript support for all dictionaries
+- **Lazy loading** - Translations loaded only when needed
+
+### Supported Languages
+
+- English (en)
+- Portuguese (pt)
+
+### Usage
+
+**Server Components:**
+
+```typescript
+const dict = await getDictionary(locale);
+return <h1>{dict.dashboard.title}</h1>;
+```
+
+**Client Components:**
+
+```typescript
+<AuthForm translation={dict} mode="sign-in" />
+```
+
+See [ADR-007: Internationalization Strategy](./docs/adr/007-i18n-strategy.md) for detailed implementation.
 
 ## 🎨 UI/UX
 
@@ -171,7 +216,7 @@ The project uses i18next for complete multi-language support. Translations are m
 
 ### Core Micro SaaS Features
 
-- ✅ **User Authentication** - Complete auth system with email/password and magic links
+- ✅ **User Authentication** - Complete auth system with magic links and Google OAuth
 - ✅ **Team Management** - Multi-user support with role-based access control
 - ✅ **Dashboard** - Analytics dashboard with charts and metrics
 - ✅ **Internationalization** - Multi-language support (PT/EN)
@@ -182,45 +227,69 @@ The project uses i18next for complete multi-language support. Translations are m
 
 ### Infrastructure
 
-- ✅ **Supabase Integration** - PostgreSQL database with real-time capabilities
-- ✅ **Email Service** - Transactional emails with Resend
+- ✅ **Supabase Auth Integration** - User management and authentication via Supabase Auth
+- ✅ **Stripe Integration** - Payment processing, subscriptions, and trial management
+- ✅ **Email Service** - Transactional emails with Resend (magic links, notifications)
 - ✅ **Environment Validation** - Type-safe environment variables with Zod
-- ✅ **Database Migrations** - Version-controlled schema changes
 - ✅ **API Routes** - Serverless API endpoints
 - ✅ **Route Protection** - Proxy-based authentication (Next.js 16)
 
 ## 🔒 Authentication
 
 - Robust authentication system with Better Auth
-- Support for multiple authentication providers (email/password, magic links, Google OAuth)
+- Support for multiple authentication providers (magic links, Google OAuth)
 - **Stateless session management** - Sessions stored in encrypted cookies (JWE)
 - **Cookie cache** - 7-day session duration with automatic refresh
+- **Automatic user sync** - Users are automatically synced to Supabase Auth and Stripe
+- **Trial subscriptions** - New users automatically get a 14-day free trial
 - Secure session management with encrypted cookies
 - Route protection for authenticated areas
 - Proxy-based authentication flow (Next.js 16)
-- Password reset and email verification flows
-- No database required for authentication (stateless mode)
+- Magic link authentication (passwordless)
+- No database required for Better Auth (stateless mode)
+
+### Authentication Flow
+
+When a user signs in (via magic link or OAuth), the following happens automatically:
+
+1. **Better Auth** - Creates/validates session in encrypted cookies
+2. **Supabase Auth** - User is synced to `auth.users` table
+3. **Stripe** - Customer is created/updated in Stripe
+4. **Subscription** - Trial subscription is created (14 days) if it doesn't exist
+5. **Metadata** - User metadata is updated with Stripe customer ID and subscription info
+
+All of this happens automatically via the `after` hook in Better Auth configuration.
 
 ## 💾 Database & Backend
 
-- **Supabase PostgreSQL** - Production-ready database
-- **Drizzle ORM** - Type-safe database queries and migrations
-- **Database Migrations** - Version-controlled schema management
-- **Type-safe API** - Full TypeScript support for database operations
-- **Real-time Capabilities** - Supabase real-time subscriptions (optional)
+### Supabase Auth
 
-### Database Scripts
+- **User Management** - User accounts stored in Supabase Auth (`auth.users`)
+- **User Metadata** - Payment and subscription data stored in `user_metadata`
+- **Service Role Key** - Required for server-side user management operations
+- **Type-safe API** - Full TypeScript support for Supabase operations
+
+### Stripe Integration
+
+- **Customer Management** - Automatic customer creation/update on user sign-up
+- **Subscription Management** - Trial subscriptions with automatic creation
+- **Payment Processing** - Ready for payment method collection and billing
+- **Webhook Support** - Webhook handlers for subscription events
+
+### Supabase Scripts
 
 ```bash
 # Link to your Supabase project
 pnpm db:link
 
-# Create a new migration
+# Create a new migration (for Supabase database schema changes)
 pnpm db:migration:new
 
 # Push migrations to database
 pnpm db:push
 ```
+
+**Note:** These scripts are for Supabase database migrations (if you need custom tables). Better Auth runs in stateless mode and doesn't require database migrations.
 
 ## 📦 Project Structure
 
@@ -229,16 +298,24 @@ pnpm db:push
 ├── proxy.ts         # Proxy for authentication and i18n (Next.js 16)
 └── src/
     ├── app/              # Next.js pages and layouts
+    │   ├── api/          # API routes
+    │   │   ├── auth/     # Better Auth API routes
+    │   │   ├── webhooks/ # Webhook handlers (Stripe)
+    │   │   └── ...       # Other API routes
+    │   └── [lang]/       # Internationalized routes
     ├── components/       # Reusable components
-    │   ├── container/   # Layout components and forms
+    │   ├── container/    # Layout components and forms
     │   ├── features/     # Feature components
-    │   ├── providers/    # Context providers
+    │   ├── providers/   # Context providers
     │   └── ui/          # UI components (Shadcn/UI)
     ├── hooks/           # Custom hooks
     ├── lib/             # Utilities and configurations
+    │   ├── auth/        # Better Auth configuration
+    │   └── ...          # Other utilities
     ├── locales/         # Translation files
     ├── models/          # TypeScript models
     │   ├── constants/   # Constants
+    │   ├── emails/      # Email templates
     │   ├── enums/       # Enums
     │   ├── interfaces/  # TypeScript interfaces
     │   │   ├── components/  # Component interfaces
@@ -247,7 +324,14 @@ pnpm db:push
     │   ├── schemas/     # Zod schemas
     │   └── types/       # TypeScript types
     ├── services/        # Services and APIs
+    │   ├── auth/        # Authentication services (Supabase sync)
+    │   ├── payment/     # Payment services (Stripe)
+    │   └── ...          # Other services
     └── server/          # Server-side utilities
+        ├── actions.ts    # Server actions
+        ├── resend.ts    # Resend email client
+        ├── stripe.ts    # Stripe client
+        └── supabase.ts  # Supabase clients (anon + admin)
 ```
 
 ### Proxy (`proxy.ts`)
@@ -303,20 +387,111 @@ Benefits of this approach:
 
 ## 🛠️ Available Scripts
 
+### Development
+
 - `pnpm dev` - Starts the development server
 - `pnpm build` - Creates production build
 - `pnpm start` - Starts the production server
-- `pnpm lint` - Runs the linter
+
+### Code Quality
+
+- `pnpm lint` - Runs ESLint and fixes issues
 - `pnpm format` - Formats code with Prettier
-- `pnpm prepare` - Sets up git hooks
 
-## 📝 Code Conventions
+### Testing
 
-- ESLint for linting
-- Prettier for formatting
-- Conventional Commits for commit messages
-- Husky for git hooks
-- TypeScript for static typing
+- `pnpm test:e2e` - Run E2E tests with Playwright
+- `pnpm test:e2e:ui` - Run E2E tests with UI
+- `pnpm test:e2e:headed` - Run E2E tests in headed mode
+- `pnpm test:e2e:debug` - Run E2E tests in debug mode
+- `pnpm test:e2e:report` - Show test report
+
+### Database
+
+- `pnpm db:link` - Link to Supabase project
+- `pnpm db:migration:new` - Create new migration
+- `pnpm db:push` - Push migrations to database
+
+### Authentication
+
+- `pnpm auth:generate` - Generate Better Auth types
+
+### Setup
+
+- `pnpm prepare` - Sets up git hooks (Husky)
+
+## 📝 Code Conventions & Patterns
+
+### Code Style
+
+- **ESLint** - Code linting with Next.js config
+- **Prettier** - Automatic code formatting
+- **TypeScript** - Full type safety across the codebase
+- **Conventional Commits** - Standardized commit messages
+
+### State Management
+
+The project uses a hybrid state management approach:
+
+| State Type       | Solution                     | Usage                    | Persistence     |
+| ---------------- | ---------------------------- | ------------------------ | --------------- |
+| Server State     | React Query (TanStack Query) | API calls, subscriptions | In-memory cache |
+| UI State         | Zustand                      | Modals, loading states   | No              |
+| User Preferences | Zustand + persist            | Locale, sidebar state    | localStorage    |
+| Form State       | React Hook Form              | Form inputs              | No              |
+| Theme            | next-themes                  | Light/dark mode          | localStorage    |
+| Session          | Better Auth                  | Authentication           | Cookie          |
+
+**Example:**
+
+```typescript
+// UI Store
+const { isOpen, open, close } = useCommandDialog();
+
+// User Preferences (persisted)
+const { locale, setLocale } = useLocale();
+```
+
+See [ADR-008: State Management](./docs/adr/008-state-management.md) for details.
+
+### Component Patterns
+
+1. **Shadcn/UI Components** - Located in `src/components/ui/`
+2. **Custom Components** - Located in `src/components/containers/` and `src/components/features/`
+3. **Component Interfaces** - Defined in `src/models/interfaces/components/`
+4. **Type Safety** - All components have TypeScript interfaces
+
+### Caching & Rate Limiting
+
+- **Upstash Redis** - Distributed cache and rate limiting
+- **Sliding Window Algorithm** - For rate limiting
+- **Fail Open Strategy** - Application continues if Redis fails
+- **Rate Limit Configurations**:
+  - STRICT: 10 req/min (Resend API)
+  - MODERATE: 30 req/min (Checkout, Subscription)
+  - RELAXED: 100 req/min (Webhooks)
+
+See [ADR-004: Caching & Rate Limiting](./docs/adr/004-caching-upstash-redis.md) for details.
+
+### Monitoring & Error Tracking
+
+- **Sentry** - Error tracking and performance monitoring
+- **Session Replay** - For debugging user sessions
+- **Core Web Vitals** - Performance metrics (LCP, FID, CLS, INP, TTFB)
+- **Source Maps** - Readable stack traces in production
+- **Privacy-First** - Text masking and media blocking in replays
+
+See [ADR-006: Monitoring](./docs/adr/006-monitoring-sentry.md) for details.
+
+### Styling Patterns
+
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **Shadcn/UI** - Component library built on Radix UI
+- **CSS Variables** - For theming (light/dark mode)
+- **Class Variance Authority (CVA)** - Component variants
+- **Responsive Design** - Mobile-first approach
+
+See [ADR-005: Styling](./docs/adr/005-styling-tailwind-shadcn.md) for details.
 
 ## 🚀 Deployment
 
@@ -329,11 +504,12 @@ The application can be deployed to various platforms. For micro SaaS application
 3. Deploy with automatic preview deployments
 4. Set up custom domain (optional)
 
-### Supabase (Database & Backend)
+### Supabase (Auth & Backend)
 
-- Database is already hosted on Supabase
-- Configure connection string in environment variables
-- Set up database migrations in Supabase dashboard
+- Supabase Auth is used for user management
+- Configure Supabase credentials in environment variables
+- Set up Supabase project and get API keys from dashboard
+- Optional: Set up database migrations if you need custom tables
 
 ### Environment Variables for Production
 
@@ -344,15 +520,25 @@ Make sure to set all required environment variables in your deployment platform:
 BETTER_AUTH_SECRET=your_production_secret
 BETTER_AUTH_URL=https://your-domain.com
 
-# Supabase Database
-DATABASE_URL=postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
+# Google OAuth
+GOOGLE_CLIENT_ID=your_production_google_client_id
+GOOGLE_CLIENT_SECRET=your_production_google_client_secret
+
+# Supabase Auth
+NEXT_PUBLIC_SUPABASE_URL=https://[project-ref].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_production_supabase_service_role_key
+
+# Stripe
+STRIPE_SECRET_KEY=sk_live_your_production_stripe_secret_key
+STRIPE_DEFAULT_PRICE_ID=price_your_production_price_id
+
+# Resend
+RESEND_API_KEY=re_your_production_resend_api_key
+RESEND_FROM_EMAIL=noreply@yourdomain.com
 
 # API
 NEXT_PUBLIC_API_URL=https://your-domain.com
-
-# Optional: Supabase Client (if using Storage/Realtime)
-NEXT_PUBLIC_SUPABASE_URL=https://[project-ref].supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ## 🤝 Contributing
@@ -393,6 +579,90 @@ We recommend:
 - 🐛 Report bugs and issues
 - 💡 Suggest features and improvements
 - 🤝 Contribute to make it better
+
+## 🧪 Testing
+
+The project includes E2E testing infrastructure with Playwright.
+
+### E2E Tests
+
+- **Playwright** - End-to-end testing framework
+- **Test Coverage** - Authentication and checkout flows
+- **Global Setup** - Test environment configuration
+- **Test Reports** - HTML reports with screenshots
+
+### Running Tests
+
+```bash
+pnpm test:e2e        # Run E2E tests
+pnpm test:e2e:ui    # Run E2E tests with UI
+pnpm test:e2e:headed # Run E2E tests in headed mode
+pnpm test:e2e:debug # Run E2E tests in debug mode
+pnpm test:e2e:report # Show test report
+```
+
+### Test Structure
+
+```
+e2e/
+├── auth.spec.ts          # Authentication tests
+├── checkout.spec.ts       # Payment flow tests
+└── global.setup.ts        # Test environment setup
+```
+
+### Future Testing Plans
+
+- **Unit Tests** - Vitest for utility functions and business logic
+- **Integration Tests** - API route testing with mocked services
+- **Component Tests** - React Testing Library for UI components
+
+## 📚 Architecture Decision Records (ADRs)
+
+This project documents all major architectural decisions in ADR format. See [docs/adr/](./docs/adr/) for complete documentation.
+
+### Key Decisions
+
+| ADR                                                 | Decision                        | Status      |
+| --------------------------------------------------- | ------------------------------- | ----------- |
+| [001](./docs/adr/001-authentication-better-auth.md) | Authentication with Better Auth | ✅ Accepted |
+| [002](./docs/adr/002-database-supabase.md)          | Supabase as Database            | ✅ Accepted |
+| [003](./docs/adr/003-payments-stripe.md)            | Stripe for Payments             | ✅ Accepted |
+| [004](./docs/adr/004-caching-upstash-redis.md)      | Upstash Redis for Cache         | ✅ Accepted |
+| [005](./docs/adr/005-styling-tailwind-shadcn.md)    | Tailwind CSS + shadcn/ui        | ✅ Accepted |
+| [006](./docs/adr/006-monitoring-sentry.md)          | Sentry for Monitoring           | ✅ Accepted |
+| [007](./docs/adr/007-i18n-strategy.md)              | Internationalization Strategy   | ✅ Accepted |
+| [008](./docs/adr/008-state-management.md)           | State Management                | ✅ Accepted |
+
+See [ADR README](./docs/adr/README.md) for more information.
+
+## 📡 API Documentation
+
+Complete API documentation is available in [docs/API.md](./docs/API.md).
+
+### Key Endpoints
+
+- `/api/auth/[...all]` - Better Auth endpoints
+- `/api/checkout` - Stripe checkout session
+- `/api/subscription` - User subscription data
+- `/api/resend` - Transactional emails
+- `/api/webhooks/stripe` - Stripe webhook handler
+- `/api/health` - Health check
+
+All endpoints include:
+
+- Rate limiting
+- Input validation
+- Error handling
+- Type-safe responses
+
+## 🔐 Security Features
+
+- **Encrypted Sessions** - JWE cookies for stateless auth
+- **Input Validation** - Zod schemas for all inputs
+- **HTML Sanitization** - XSS protection
+- **Rate Limiting** - Redis-based sliding window
+- **Security Headers** - CSP, HSTS, X-Frame-Options
+- **Environment Validation** - Type-safe env variables
 
 ## 📄 License
 

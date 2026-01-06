@@ -1,3 +1,22 @@
 {
-  "title": "Welcome to the template"
+  "title": "Welcome to the template",
+  "payment": {
+    "required": "Payment Required",
+    "pastDue": "Your subscription has a pending payment. To continue using the service, payment is required.",
+    "trialExpired": "Your trial period has expired. To continue using the service, add a payment method.",
+    "amountToPay": "Amount to pay",
+    "later": "Later",
+    "payNow": "Pay Now",
+    "loading": "Loading..."
+  },
+  "trial": {
+    "loading": "Loading trial information...",
+    "active": "Trial active",
+    "expired": "Trial expired",
+    "expiredNoPlan": "Trial expired - Add a payment method",
+    "remaining": "Trial: {{days}} remaining",
+    "lessThanOneDay": "less than 1 day",
+    "day": "day",
+    "days": "days"
+  }
 }

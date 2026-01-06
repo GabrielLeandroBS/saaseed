@@ -2,6 +2,14 @@ import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
 
+/**
+ * Generates robots.txt metadata
+ *
+ * Configures which paths search engines can crawl.
+ * Disallows API routes, internal pages, and authentication pages.
+ *
+ * @returns MetadataRoute.Robots configuration
+ */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [

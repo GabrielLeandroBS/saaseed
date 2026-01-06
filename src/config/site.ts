@@ -1,5 +1,9 @@
-export type SiteConfig = typeof siteConfig;
-
+/**
+ * Site configuration object
+ *
+ * Contains metadata, navigation, links, and keywords for the application.
+ * Used for SEO, metadata generation, and site-wide settings.
+ */
 export const siteConfig = {
   name: "Template",
   shortName: "Template",

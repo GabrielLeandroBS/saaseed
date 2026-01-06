@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { cookies } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { siteConfig } from "@/config/site";
+import { env } from "@/env";
 
 import "@/app/globals.css";
 import { LayoutProps } from "@/models/types/layout";
@@ -19,20 +24,20 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "Template - Next.js",
-    template: "%s | Template",
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "A modern web application template built with Next.js",
-  keywords: ["next.js", "react", "template", "web application"],
-  authors: [{ name: "Template Team" }],
-  creator: "Template Team",
-  publisher: "Template",
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://www.template.com"),
+  metadataBase: new URL(siteConfig.siteUrl),
   alternates: {
     canonical: "/",
     languages: {
@@ -43,16 +48,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://www.template.com",
-    title: "Template - Next.js Application",
-    description: "A modern web application template built with Next.js",
-    siteName: "Template",
+    url: siteConfig.siteUrl,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Template - Next.js Application",
-    description: "A modern web application template built with Next.js",
-    creator: "@template",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    creator: siteConfig.links.twitter.replace("https://twitter.com/", "@"),
   },
   robots: {
     index: true,
@@ -66,27 +71,41 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "google-site-verification-code",
+    google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
 };
 
+/**
+ * Root layout component
+ *
+ * Wraps entire application with providers (Theme, Query, etc.).
+ * Configures fonts, metadata, and global styles.
+ * Handles locale detection from cookies.
+ *
+ * @param children - React children to render
+ * @returns Root layout JSX
+ */
 const Layout = async ({ children }: LayoutProps) => {
   const getCookieLang = (await cookies()).get("NEXT_LOCALE");
 
   return (
     <html lang={getCookieLang?.value} suppressHydrationWarning>
       <body className={`${outfit.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main className="flex items-center justify-center min-h-screen bg-background">
-            {children}
-          </main>
-          <Toaster />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main className="flex items-center justify-center min-h-screen bg-background">
+              {children}
+            </main>
+            <Toaster />
+          </ThemeProvider>
+        </QueryProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

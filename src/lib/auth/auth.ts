@@ -1,9 +1,29 @@
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
+import { createAuthMiddleware } from "better-auth/api";
 import { env } from "@/env";
-import { resend } from "@/server/resend";
+import { resend } from "@/server/clients/resend";
+import { syncUserAfterAuth } from "@/services/auth/sync";
+import { getMagicLinkEmailTemplate } from "@/models/emails/magic-link";
+import { logError } from "@/server/utils/logger";
 
+/**
+ * Better Auth configuration
+ *
+ * This is the main authentication instance used throughout the application.
+ * It's configured in stateless mode (no database), storing sessions in encrypted cookies.
+ *
+ * Features:
+ * - Magic link authentication (passwordless)
+ * - Google OAuth
+ * - Automatic user sync to Supabase and Stripe after authentication
+ *
+ * The `after` hook automatically syncs users to:
+ * - Supabase Auth (for user management and RLS)
+ * - Stripe (for payment processing)
+ * - Creates trial subscription with 14-day free trial
+ */
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
@@ -25,6 +45,38 @@ export const auth = betterAuth({
     storeStateStrategy: "cookie",
     storeAccountCookie: true,
   },
+  hooks: {
+    /**
+     * After hook: Runs after successful authentication operations
+     *
+     * Automatically syncs user to:
+     * - Supabase Auth (creates/updates user in auth.users)
+     * - Stripe (creates/updates customer and subscription)
+     *
+     * Only runs for authentication operations (sign-in, sign-up, magic-link, OAuth)
+     */
+    after: createAuthMiddleware(async (ctx) => {
+      const newSession = ctx.context.newSession;
+      if (!newSession?.user) return;
+
+      const isAuthOperation =
+        ctx.path.includes("/sign-in") ||
+        ctx.path.includes("/sign-up") ||
+        ctx.path.includes("/callback") ||
+        ctx.path.includes("/magic-link") ||
+        ctx.path.includes("/verify") ||
+        ctx.path.includes("/social");
+
+      if (!isAuthOperation) return;
+
+      await syncUserAfterAuth({
+        userId: newSession.user.id,
+        email: newSession.user.email ?? "",
+        name: newSession.user.name,
+        image: newSession.user.image,
+      });
+    }),
+  },
   plugins: [
     nextCookies(),
     magicLink({
@@ -34,37 +86,23 @@ export const auth = betterAuth({
             from: env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
             to: email,
             subject: "Sign in to your account",
-            html: `
-              <!DOCTYPE html>
-              <html>
-                <head>
-                  <meta charset="utf-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                </head>
-                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-                    <h1 style="color: white; margin: 0;">Magic Link</h1>
-                  </div>
-                  <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
-                    <p style="font-size: 16px; margin-bottom: 20px;">Click the button below to sign in to your account:</p>
-                    <div style="text-align: center; margin: 30px 0;">
-                      <a href="${url}" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">Sign In</a>
-                    </div>
-                    <p style="font-size: 14px; color: #666; margin-top: 30px;">Or copy and paste this link into your browser:</p>
-                    <p style="font-size: 12px; color: #999; word-break: break-all; background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">${url}</p>
-                    <p style="font-size: 12px; color: #999; margin-top: 30px;">This link will expire in 5 minutes. If you didn't request this, please ignore this email.</p>
-                  </div>
-                </body>
-              </html>
-            `,
+            html: getMagicLinkEmailTemplate(url),
           });
 
           if (error) {
-            console.error("Resend error:", error);
+            logError(error, {
+              context: "magic-link",
+              service: "resend",
+              action: "send-email",
+            });
             throw new Error("Failed to send magic link email");
           }
         } catch (error) {
-          console.error("Error sending magic link:", error);
+          logError(error, {
+            context: "magic-link",
+            service: "resend",
+            action: "send-email",
+          });
           throw error;
         }
       },

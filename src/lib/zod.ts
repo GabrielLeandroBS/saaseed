@@ -1,3 +1,10 @@
+/**
+ * Zod with i18n support
+ *
+ * Configures Zod with internationalized error messages.
+ * Automatically detects locale from NEXT_LOCALE cookie.
+ */
+
 import i18next from "i18next";
 import Cookies from "js-cookie";
 import { z } from "zod";

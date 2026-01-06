@@ -2,18 +2,28 @@ import { Rocket } from "lucide-react";
 
 import { Text } from "@/components/ui/text";
 
-import { getDictionary } from "@/lib/get/dictionaries";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
-import { ParamsProps } from "@/models/interfaces/components/params";
+import { LocaleType } from "@/models/types/locale";
+import type { AuthLayoutProps } from "@/models/interfaces/layout/auth-layout";
 
+/**
+ * Authentication layout component
+ *
+ * Provides layout for authentication pages (sign-in, sign-up).
+ * Displays welcome title and logo, loads translations.
+ *
+ * @param children - Authentication page content
+ * @param params - Route parameters containing language
+ * @returns Promise resolving to auth layout JSX
+ */
 export default async function AuthLayout({
   children,
   params,
-}: {
-  children: React.ReactNode;
-} & ParamsProps) {
+}: AuthLayoutProps) {
   const { lang } = await params;
-  const dict = await getDictionary(lang);
+  const locale = lang as LocaleType;
+  const dict = await getDictionary(locale);
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-6 md:p-10">

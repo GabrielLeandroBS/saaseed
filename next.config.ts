@@ -1,9 +1,65 @@
 import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
+import { env } from "@/env";
 
-const isProduction = process.env.NODE_ENV === "production";
-const isDevelopment = process.env.NODE_ENV === "development";
+const isProduction = env.NODE_ENV === "production";
+const isDevelopment = env.NODE_ENV === "development";
+
+/**
+ * Content Security Policy configuration
+ *
+ * Defines trusted sources for scripts, styles, images, and other resources.
+ * Uses 'unsafe-inline' for styles (required by Tailwind CSS).
+ * Uses 'unsafe-eval' in development for hot reload.
+ */
+const cspDirectives = {
+  "default-src": ["'self'"],
+  "script-src": [
+    "'self'",
+    "https://js.stripe.com",
+    "https://accounts.google.com",
+    ...(isDevelopment ? ["'unsafe-eval'"] : []),
+  ],
+  "style-src": ["'self'", "'unsafe-inline'"],
+  "img-src": [
+    "'self'",
+    "data:",
+    "blob:",
+    "https://*.supabase.co",
+    "https://*.googleusercontent.com",
+    "https://*.stripe.com",
+  ],
+  "font-src": ["'self'"],
+  "connect-src": [
+    "'self'",
+    "https://*.supabase.co",
+    "https://api.stripe.com",
+    "https://accounts.google.com",
+    "https://*.sentry.io",
+    "https://*.ingest.sentry.io",
+    ...(isDevelopment ? ["ws://localhost:3000"] : []),
+  ],
+  "frame-src": [
+    "'self'",
+    "https://js.stripe.com",
+    "https://accounts.google.com",
+  ],
+  "object-src": ["'none'"],
+  "base-uri": ["'self'"],
+  "form-action": ["'self'"],
+  "frame-ancestors": ["'self'"],
+  "upgrade-insecure-requests": isProduction ? [] : undefined,
+};
+
+const contentSecurityPolicy = Object.entries(cspDirectives)
+  .filter(([, value]) => value !== undefined)
+  .map(([key, value]) => {
+    if (Array.isArray(value) && value.length === 0) {
+      return key;
+    }
+    return `${key} ${(value as string[]).join(" ")}`;
+  })
+  .join("; ");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -20,7 +76,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
       allowedOrigins: isProduction
-        ? [process.env.BETTER_AUTH_URL || ""]
+        ? [env.BETTER_AUTH_URL]
         : ["localhost:3000", "127.0.0.1:3000"],
     },
 
@@ -31,7 +87,6 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-label",
       "@radix-ui/react-select",
       "@radix-ui/react-slot",
-      "@radix-ui/react-toast",
       "@radix-ui/react-accordion",
       "@radix-ui/react-alert-dialog",
       "@radix-ui/react-avatar",
@@ -83,7 +138,9 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  serverExternalPackages: ["sharp", "postgres", "@supabase/supabase-js"],
+  serverExternalPackages: ["sharp", "@supabase/supabase-js"],
+
+  output: isProduction ? "standalone" : undefined,
 
   compress: true,
   poweredByHeader: false,
@@ -111,6 +168,10 @@ const nextConfig: NextConfig = {
         {
           key: "Permissions-Policy",
           value: "camera=(), microphone=(), geolocation=()",
+        },
+        {
+          key: "Content-Security-Policy",
+          value: contentSecurityPolicy,
         },
         ...(isProduction
           ? [

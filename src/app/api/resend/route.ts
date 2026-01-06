@@ -1,41 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import { resend } from "@/server/resend";
+import { NextRequest } from "next/server";
+import { handleResendEmail } from "@/server/routes/resend/handler";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 10;
 
+/**
+ * POST handler for Resend email API route
+ *
+ * Sends transactional emails via Resend API.
+ * Used for magic links, password resets, and notifications.
+ * Configured with 10 second max duration.
+ *
+ * @param request - Next.js request object
+ * @returns Response indicating email send status
+ */
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-
-    const { to, subject, html, from } = body;
-
-    if (!to || !subject || !html) {
-      return NextResponse.json(
-        { error: "Missing required fields: to, subject, html" },
-        { status: 400 },
-      );
-    }
-
-    const { data, error } = await resend.emails.send({
-      from: from || "onboarding@resend.dev",
-      to,
-      subject,
-      html,
-    });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.json({ data, success: true }, { status: 200 });
-  } catch (error) {
-    console.error("Resend API error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-  }
+  return handleResendEmail(request);
 }

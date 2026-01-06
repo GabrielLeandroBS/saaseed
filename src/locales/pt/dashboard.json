@@ -1,3 +1,22 @@
 {
-  "title": "Dashboard"
+  "title": "Dashboard",
+  "payment": {
+    "required": "Pagamento Necessário",
+    "pastDue": "Sua assinatura está com pagamento pendente. Para continuar usando o serviço, é necessário realizar o pagamento.",
+    "trialExpired": "Seu período de trial expirou. Para continuar usando o serviço, adicione um método de pagamento.",
+    "amountToPay": "Valor a pagar",
+    "later": "Depois",
+    "payNow": "Pagar Agora",
+    "loading": "Carregando..."
+  },
+  "trial": {
+    "loading": "Carregando informações do trial...",
+    "active": "Trial ativo",
+    "expired": "Trial expirado",
+    "expiredNoPlan": "Trial expirado - Adicione um método de pagamento",
+    "remaining": "Trial: {{days}} restantes",
+    "lessThanOneDay": "menos de 1 dia",
+    "day": "dia",
+    "days": "dias"
+  }
 }

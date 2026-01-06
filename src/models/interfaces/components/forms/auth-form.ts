@@ -1,8 +1,16 @@
-import { DictionaryType } from "@/lib/get/dictionaries";
+/**
+ * Auth form interfaces
+ *
+ * Interfaces for authentication form component props.
+ */
+
+import type { DictionaryType } from "@/models/types/i18n";
 import { LocaleType } from "@/models/types/locale";
+import type { AuthFormMode } from "@/models/types/components/forms";
 
-export type AuthFormMode = "sign-in" | "sign-up";
-
+/**
+ * Props for AuthForm component
+ */
 export interface AuthFormProps extends React.ComponentProps<"div"> {
   mode: AuthFormMode;
   translation: DictionaryType;
