@@ -39,5 +39,5 @@ export default async function SignUpPage({ params }: ParamsProps) {
 
   const dict = await getDictionary(lang);
 
-  return <AuthForm mode="sign-up" translation={dict} lang={lang} />;
+  return <AuthForm mode="sign-up" translation={dict} />;
 }

@@ -48,7 +48,6 @@ export function AuthForm({
   mode,
   className,
   translation,
-  lang,
   ...props
 }: AuthFormProps) {
   const router = useRouter();
@@ -88,8 +87,8 @@ export function AuthForm({
       const maskedLocal = localPart.slice(0, 3) + "***";
       const maskedEmail = `${maskedLocal}@${domain}`;
 
-      // Redirect to check-email page with masked email
-      const checkEmailUrl = `/${lang}/${FrontendRoutesEnum.CHECK_EMAIL}?email=${encodeURIComponent(maskedEmail)}`;
+      // Redirect to check-email page with masked email (proxy handles locale prefix)
+      const checkEmailUrl = `/${FrontendRoutesEnum.CHECK_EMAIL}?email=${encodeURIComponent(maskedEmail)}`;
       router.push(checkEmailUrl);
     } catch (error) {
       const errorMessage =

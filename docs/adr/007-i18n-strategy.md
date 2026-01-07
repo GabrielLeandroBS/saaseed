@@ -142,9 +142,23 @@ z.setErrorMap(zodI18nMap);
 
 ```typescript
 // src/proxy.ts
-// Detects locale and redirects
-// Stores preference in NEXT_LOCALE cookie
+// Detects locale from cookie or Accept-Language header
+// Redirects routes without locale prefix to /${locale}/${route}
+// Stores preference in NEXT_LOCALE cookie (30 days)
 ```
+
+**Important**: When navigating within the app, you don't need to include the locale prefix in URLs. The proxy middleware automatically handles this:
+
+```typescript
+// ✅ Correct - proxy adds locale prefix automatically
+router.push(`/${FrontendRoutesEnum.DASHBOARD}`);
+<Link href={`/${FrontendRoutesEnum.SIGN_IN}`}>Sign In</Link>
+
+// ❌ Incorrect - don't hardcode locale
+router.push(`/${lang}/${FrontendRoutesEnum.DASHBOARD}`);
+```
+
+This simplifies components by removing the need to pass `lang` through props just for navigation.
 
 ### SEO
 

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { FrontendRoutesEnum } from "@/models/enums/frontend-routes";
 import type { LocaleType } from "@/models/types/locale";
 
 /**
@@ -11,6 +12,9 @@ import type { LocaleType } from "@/models/types/locale";
  *
  * Displays a 404 error page with a message and a link to the home page.
  * Supports internationalization with translations.
+ *
+ * Note: This page is outside the [lang] segment, so it reads locale from cookie.
+ * The link uses "/" and the proxy handles the locale redirect.
  *
  * @returns JSX element for not found page
  */
@@ -35,7 +39,9 @@ export default async function NotFound() {
         </Text>
       </div>
       <Button asChild variant="default">
-        <Link href={`/${lang}`}>{dict.common.notFound.returnHome}</Link>
+        <Link href={FrontendRoutesEnum.HOME}>
+          {dict.common.notFound.returnHome}
+        </Link>
       </Button>
     </div>
   );
