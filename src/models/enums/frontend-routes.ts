@@ -16,7 +16,7 @@
 export enum FrontendRoutesEnum {
   HOME = "/",
   DASHBOARD = "dashboard",
-  DASHBOARD_SEARCH = "dashboard/search",
   SIGN_IN = "sign-in",
   SIGN_UP = "sign-up",
+  CHECK_EMAIL = "check-email",
 }

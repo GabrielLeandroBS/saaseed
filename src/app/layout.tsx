@@ -24,14 +24,18 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
+    default: `${siteConfig.name} - Production-Ready SaaS Boilerplate`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   keywords: siteConfig.keywords,
-  authors: [{ name: siteConfig.name }],
+  authors: [{ name: siteConfig.name, url: siteConfig.siteUrl }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
+  category: siteConfig.category,
+  applicationName: siteConfig.name,
+  generator: "Next.js",
+  referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,
     address: false,
@@ -47,24 +51,38 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "pt_BR",
+    locale: "en_US",
+    alternateLocale: ["pt_BR"],
     url: siteConfig.siteUrl,
-    title: siteConfig.name,
+    title: `${siteConfig.name} - Launch Your SaaS Faster`,
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} - SaaS Boilerplate`,
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: `${siteConfig.name} - Production-Ready SaaS Boilerplate`,
     description: siteConfig.description,
     creator: siteConfig.links.twitter.replace("https://twitter.com/", "@"),
+    site: siteConfig.links.twitter.replace("https://twitter.com/", "@"),
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -73,6 +91,32 @@ export const metadata: Metadata = {
   verification: {
     google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "apple-mobile-web-app-title": siteConfig.shortName,
+    "mobile-web-app-capable": "yes",
+    "msapplication-TileColor": siteConfig.themeColor,
+    "msapplication-config": "/browserconfig.xml",
+    "theme-color": siteConfig.themeColor,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: siteConfig.themeColor,
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 /**

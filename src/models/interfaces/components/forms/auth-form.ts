@@ -14,6 +14,6 @@ import type { AuthFormMode } from "@/models/types/components/forms";
 export interface AuthFormProps extends React.ComponentProps<"div"> {
   mode: AuthFormMode;
   translation: DictionaryType;
-  lang?: LocaleType;
+  lang: LocaleType;
   token?: string;
 }

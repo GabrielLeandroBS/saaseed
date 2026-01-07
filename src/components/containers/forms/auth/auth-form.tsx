@@ -3,6 +3,7 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,8 +48,10 @@ export function AuthForm({
   mode,
   className,
   translation,
+  lang,
   ...props
 }: AuthFormProps) {
+  const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const [googleLoading, setGoogleLoading] = React.useState(false);
 
@@ -70,53 +73,50 @@ export function AuthForm({
 
     setLoading(true);
 
-    const authPromise = signIn
-      .magicLink({
+    try {
+      const result = await signIn.magicLink({
         email: validatedCredentials.email,
         callbackURL: `/${FrontendRoutesEnum.DASHBOARD}`,
-      })
-      .then((result) => {
-        if (result.error) {
-          throw new Error(result.error.message || "Failed to send magic link");
-        }
-        return result;
-      })
-      .catch((error) => {
-        throw error;
-      })
-      .finally(() => {
-        setLoading(false);
       });
 
-    toast.promise(authPromise, {
-      loading: translation?.generic.loading,
-      success: () => {
-        return isSignUp
-          ? translation?.success.userCreated ||
-              "Magic link sent! Check your email."
-          : translation?.success.signInSuccess ||
-              "Magic link sent! Check your email.";
-      },
-      error: (error: Error | string) => {
-        const errorMessage = typeof error === "string" ? error : error.message;
-        if (isSignUp) {
-          if (
-            errorMessage.includes("already exists") ||
-            errorMessage.includes("user")
-          ) {
-            return translation?.errors.userAlreadyExists;
-          }
+      if (result.error) {
+        throw new Error(result.error.message || "Failed to send magic link");
+      }
+
+      // Mask email before passing to URL (e.g., gab***@gmail.com)
+      const [localPart, domain] = validatedCredentials.email.split("@");
+      const maskedLocal = localPart.slice(0, 3) + "***";
+      const maskedEmail = `${maskedLocal}@${domain}`;
+
+      // Redirect to check-email page with masked email
+      const checkEmailUrl = `/${lang}/${FrontendRoutesEnum.CHECK_EMAIL}?email=${encodeURIComponent(maskedEmail)}`;
+      router.push(checkEmailUrl);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      if (isSignUp) {
+        if (
+          errorMessage.includes("already exists") ||
+          errorMessage.includes("user")
+        ) {
+          toast.error(translation?.errors.userAlreadyExists);
         } else {
-          if (
-            errorMessage === "Failed to send magic link" ||
-            errorMessage.includes("Invalid")
-          ) {
-            return translation?.errors.signInFailed;
-          }
+          toast.error(translation?.errors.failedRequest);
         }
-        return translation?.errors.failedRequest;
-      },
-    });
+      } else {
+        if (
+          errorMessage === "Failed to send magic link" ||
+          errorMessage.includes("Invalid")
+        ) {
+          toast.error(translation?.errors.signInFailed);
+        } else {
+          toast.error(translation?.errors.failedRequest);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSignIn = async () => {

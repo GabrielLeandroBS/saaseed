@@ -69,6 +69,13 @@ export interface AuthDictionary {
   signInWithGoogle: string;
   signUpWithGoogle: string;
   welcomeTitle: string;
+  checkEmailTitle: string;
+  checkEmailSubtitle: string;
+  checkEmailDescription: string;
+  checkEmailNotReceived: string;
+  checkEmailResend: string;
+  checkEmailSpam: string;
+  backToSignIn: string;
 }
 
 export interface CommonDictionary {
